@@ -1,0 +1,44 @@
+{
+  "currency_default": "USD",
+  "exchange_rate_source": "BCV_simulated",
+  "products": [
+    {
+      "id": "bachillerato_adultos",
+      "name": "Programa de Bachillerato para Adultos",
+      "type": "program",
+      "mode": "100% online",
+      "billing_cycle": "semester",
+      "duration_months": 6,
+      "pricing": {
+        "setup_fee": 30.00,
+        "monthly_fee": 40.00,
+        "ltv_semester": 270.00
+      },
+      "promotions": []
+    },
+    {
+      "id": "curso_taller_workshop",
+      "name": "Cursos, Talleres y Workshops",
+      "type": "single_purchase",
+      "mode": "acceso directo",
+      "pricing": {
+        "setup_fee": 0.00,
+        "price": 30.00,
+        "ltv_semester": 30.00
+      },
+      "promotions": []
+    }
+  ],
+  "payment_gateways": {
+    "national": {
+      "region": "VE",
+      "currency": "VES",
+      "methods": ["pago_movil", "transferencia_bancaria"]
+    },
+    "international": {
+      "region": "GLOBAL",
+      "currency": "USD",
+      "methods": ["cash", "zelle", "paypal", "credit_card"]
+    }
+  }
+}

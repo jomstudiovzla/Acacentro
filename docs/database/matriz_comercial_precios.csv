@@ -1,0 +1,3 @@
+id,nombre,tipo,modalidad,matricula,cuota_mensual,precio_unico,duracion_semestre,ltv,venta_promocional
+bachillerato_adultos,Programa de Bachillerato para Adultos,program,100% online,30,40,,6,270,"sin promoción activa"
+curso_taller_workshop,Cursos/Talleres/Workshops,single_purchase,acceso directo,,,30,,,"sin matrícula"
