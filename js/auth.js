@@ -632,4 +632,31 @@
     return session;
   };
 
+  /* ══════════════════════════════════════════
+     AUTO-DETECCIÓN DE REDIRECCIÓN DE GOOGLE
+  ══════════════════════════════════════════ */
+  window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('google_mock_login') === 'true') {
+      const name = urlParams.get('name');
+      const email = urlParams.get('email');
+      const picture = urlParams.get('picture');
+      
+      if (name && email) {
+        // Limpiar la URL de parámetros para mantener la barra de direcciones limpia
+        const cleanUrl = window.location.pathname + (window.location.hash || '');
+        window.history.replaceState({}, document.title, cleanUrl);
+        
+        // Iniciar flujo de procesamiento
+        const mockProfile = {
+          id: 'GGL-' + simpleHash(email),
+          name: name,
+          email: email,
+          picture: picture
+        };
+        processGoogleAuth(mockProfile);
+      }
+    }
+  });
+
 })();
