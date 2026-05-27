@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Misión 1: El Contador de Meteoritos</title>
+    <style>
+        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #0b091a; font-family: 'Arial Rounded MT Bold', sans-serif; }
+        
+        /* Fondo espacial con la textura real provista */
+        #game-container { 
+            position: relative; 
+            width: 100%; 
+            height: 100%; 
+            background: url('assets/videojuego/Fondo de pantalla JUEGO.png') no-repeat center center;
+            background-size: cover;
+            overflow: hidden; 
+        }
+        
+        /* Interfaz de la Cabina */
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; }
+        .hud-panel { background: rgba(13, 8, 38, 0.75); border: 2px solid rgba(0, 242, 254, 0.6); backdrop-filter: blur(5px); border-radius: 20px; padding: 12px 25px; color: #fff; font-size: 24px; text-shadow: 0 0 10px #00f2fe; pointer-events: auto; box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
+        
+        /* Pantallas de Estado */
+        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(13, 8, 38, 0.85); backdrop-filter: blur(6px); z-index: 10; padding: 30px; text-align: center; }
+        .card { background: linear-gradient(135deg, #221545 0%, #3a1c71 100%); border: 4px solid #ff007f; border-radius: 30px; padding: 30px; max-width: 550px; color: white; box-shadow: 0 0 30px rgba(255, 0, 127, 0.4); transform: scale(1); transition: transform 0.3s; display: flex; flex-direction: column; align-items: center; }
+        
+        h1 { margin-top: 10px; color: #00f2fe; text-shadow: 0 0 15px #00f2fe; font-size: 28px; text-transform: uppercase; }
+        p { font-size: 17px; line-height: 1.5; color: #e0d5ff; margin-bottom: 12px; }
+        
+        /* Botón de Play usando la textura oficial play.png */
+        .btn-space-play {
+            margin-top: 20px; 
+            background: url('assets/videojuego/play.png') no-repeat center center;
+            background-size: contain;
+            border: none; 
+            width: 210px;
+            height: 70px;
+            cursor: pointer; 
+            transition: transform 0.15s ease;
+            outline: none;
+        }
+        .btn-space-play:active { transform: scale(0.92); }
+
+        /* Botón Estándar de Volver */
+        .btn-space-back {
+            margin-top: 20px; 
+            background: linear-gradient(to bottom, #00f2fe, #4facfe); 
+            border: none; 
+            border-radius: 15px; 
+            padding: 12px 35px; 
+            font-size: 20px; 
+            font-weight: bold; 
+            color: #0d0826; 
+            cursor: pointer; 
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4); 
+            text-transform: uppercase; 
+            transition: all 0.2s;
+        }
+        .btn-space-back:active { transform: scale(0.95); }
+        
+        canvas { display: block; width: 100%; height: 100%; }
+        
+        /* Efecto mancha de Alien */
+        #ink-splat { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(147,51,234,0.85) 0%, rgba(0,0,0,0) 65%); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 5; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="ink-splat"></div>
+    <canvas id="spaceCanvas"></canvas>
+
+    <div id="ui-layer">
+        <div style="display: flex; justify-content: space-between; width: 100%;">
+            <div class="hud-panel" id="score-board">Contados: 0</div>
+            <div class="hud-panel" id="ia-status" style="border-color: #ff007f; text-shadow: 0 0 10px #ff007f;">Nivel: Adaptativo ✨</div>
+        </div>
+    </div>
+
+    <!-- PANTALLA INTRO -->
+    <div id="intro-screen" class="screen">
+        <div class="card">
+            <!-- Logo oficial del proyecto -->
+            <img src="assets/videojuego/Proyecto 1.png" style="width: 150px; height: auto; margin-bottom: 10px;" alt="Proyecto 1">
+            <h1>🚀 Misión 1: El Contador</h1>
+            <p>¡Lluvia de <b>Planetas Matemáticos</b> en camino! Tócalos para destruirlos y contarlos con tu láser espacial.</p>
+            <p style="color: #ff007f; font-size: 15px; font-weight: bold;">⚠️ ¡Esquiva las Naves Marcianas! Si las tocas, mancharán tu cabina con tinta galáctica.</p>
+            <button class="btn-space-play" onclick="startMission()" aria-label="Despegar"></button>
+        </div>
+    </div>
+
+    <!-- PANTALLA VICTORIA -->
+    <div id="victory-screen" class="screen" style="display: none;">
+        <div class="card" style="border-color: #00f2fe; box-shadow: 0 0 30px rgba(0, 242, 254, 0.4);">
+            <img src="assets/videojuego/Proyecto 1.png" style="width: 140px; height: auto;" alt="Proyecto 1">
+            <h1>🌟 ¡MISIÓN CUMPLIDA! 🌟</h1>
+            <p>Excelente precisión espacial. Los escudos de la Nave Madre se han reestablecido con tus cálculos.</p>
+            <h2 id="final-count" style="color: #ffff00; font-size: 32px; text-shadow: 0 0 10px rgba(255,255,0,0.5); margin: 15px 0;">Destruidos: 0</h2>
+            <button class="btn-space-back" onclick="reportBack()">Volver a la Nave Madre</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('spaceCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Ajustar resolución de Canvas
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // 🚀 CARGAR ASSETS GRÁFICOS REALES
+    const imgShipPlayer = new Image();
+    imgShipPlayer.src = 'assets/videojuego/Nave Roja.png';
+
+    const imgShipAlien = new Image();
+    imgShipAlien.src = 'assets/videojuego/Nave Amarilla.png';
+
+    const imgPlanetMath = new Image();
+    imgPlanetMath.src = 'assets/videojuego/Planeta Matematicas.png';
+
+    // 🧠 Motor de IA Adaptativa y Configuración General
+    let gameState = "INTRO";
+    let score = 0;
+    let targetScore = 5; // Inicia en Nivel 1 (Pedir 5)
+    let entities = [];
+    let laserLine = null;
+    let lastTime = 0;
+
+    const IA_Engine = {
+        reactionTimes: [],
+        errorsCount: 0,
+        currentSpeed: 1.5,
+        currentSpawnRate: 0.018,
+        
+        analyzeAndAdjust: function(latestReactionTime) {
+            this.reactionTimes.push(latestReactionTime);
+            // Si el niño destruye muy rápido, la IA sube de nivel discretamente
+            if(latestReactionTime < 1400 && score >= 3) {
+                this.currentSpeed = 2.4;
+                this.currentSpawnRate = 0.028;
+                targetScore = 12; // Sube automáticamente a dificultad Nivel 2
+                document.getElementById('ia-status').innerText = "Modo: Súper Piloto ⚡";
+            }
+        },
+        registerError: function() {
+            this.errorsCount++;
+            // Si hay muchos errores, la IA suaviza el juego para evitar frustración
+            if(this.errorsCount >= 2) {
+                this.currentSpeed = 1.0;
+                this.currentSpawnRate = 0.012;
+                document.getElementById('ia-status').innerText = "Modo: Vuelo Seguro 🛡️";
+            }
+        }
+    };
+
+    // Constructor de Objetos (Meteoritos y Distractores - Estilo Space Invaders)
+    class SpaceEntity {
+        constructor(type) {
+            this.type = type; // 'meteorito' o 'alien'
+            this.radius = Math.random() * 15 + 28; // Elementos grandes para niños pequeños
+            this.x = Math.random() * (canvas.width - this.radius * 2) + this.radius;
+            this.y = -this.radius;
+            this.speedY = IA_Engine.currentSpeed + (Math.random() * 0.4);
+            this.wobbleSpeed = Math.random() * 0.02 + 0.01;
+            this.wobbleRange = Math.random() * 25 + 10;
+            this.wobbleAngle = 0;
+            this.baseX = this.x;
+            this.color = type === 'meteorito' ? '#00f2fe' : '#ffe600';
+            this.isDead = false;
+        }
+
+        update() {
+            // Movimiento estilo Space Invaders: Descenso con vaivén horizontal
+            this.y += this.speedY;
+            this.wobbleAngle += this.wobbleSpeed;
+            this.x = this.baseX + Math.sin(this.wobbleAngle) * this.wobbleRange;
+            
+            if (this.y > canvas.height + this.radius) {
+                this.isDead = true;
+            }
+        }
+
+        draw() {
+            ctx.save();
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = this.color;
+
+            if(this.type === 'meteorito') {
+                // Renderizar el Planeta Matemáticas Real si cargó correctamente
+                if (imgPlanetMath.complete && imgPlanetMath.naturalWidth !== 0) {
+                    ctx.drawImage(imgPlanetMath, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+                } else {
+                    // Fallback visual brutalista facetado
+                    ctx.fillStyle = '#1e293b';
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+            } else {
+                // Renderizar la Nave Amarilla Real si cargó correctamente
+                if (imgShipAlien.complete && imgShipAlien.naturalWidth !== 0) {
+                    ctx.drawImage(imgShipAlien, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+                } else {
+                    // Fallback marciano
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius * 0.8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            ctx.restore();
+        }
+    }
+
+    // Dibujar la Nave Roja abajo
+    function drawPlayerShip() {
+        ctx.save();
+        let nX = canvas.width / 2;
+        let nY = canvas.height - 75;
+
+        // Fuego del propulsor (Animado dinámicamente)
+        let fireHeight = 35 + Math.random() * 15;
+        let gradFire = ctx.createLinearGradient(nX, nY + 45, nX, nY + 45 + fireHeight);
+        gradFire.addColorStop(0, '#ffcc00');
+        gradFire.addColorStop(0.5, '#ff3300');
+        gradFire.addColorStop(1, 'rgba(255,0,0,0)');
+        ctx.fillStyle = gradFire;
+        ctx.beginPath();
+        ctx.moveTo(nX - 16, nY + 38);
+        ctx.quadraticCurveTo(nX, nY + 45 + fireHeight, nX + 16, nY + 38);
+        ctx.closePath();
+        ctx.fill();
+
+        // Renderizar Nave Roja Real
+        const shipSize = 90;
+        if (imgShipPlayer.complete && imgShipPlayer.naturalWidth !== 0) {
+            ctx.drawImage(imgShipPlayer, nX - shipSize/2, nY - shipSize/2, shipSize, shipSize);
+        } else {
+            // Fallback de cohete rojo
+            ctx.fillStyle = '#d63031';
+            ctx.strokeStyle = '#ffeaa7';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(nX, nY - 45);
+            ctx.lineTo(nX + 25, nY + 35);
+            ctx.lineTo(nX - 25, nY + 35);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
+    // Control de Interacción táctil o clic
+    window.addEventListener('pointerdown', function(e) {
+        if(gameState !== "GAMEPLAY") return;
+
+        let rect = canvas.getBoundingClientRect();
+        let clickX = e.clientX - rect.left;
+        let clickY = e.clientY - rect.top;
+        
+        // Registrar disparo láser
+        laserLine = { fromX: canvas.width / 2, fromY: canvas.height - 110, toX: clickX, toY: clickY, alpha: 1 };
+        playLaserSound(); 
+
+        let hitSomething = false;
+
+        for (let entity of entities) {
+            let dist = Math.hypot(entity.x - clickX, entity.y - clickY);
+            if (dist < entity.radius + 18) { // Margen amplio para niños
+                hitSomething = true;
+                entity.isDead = true;
+
+                if (entity.type === 'meteorito') {
+                    score++;
+                    document.getElementById('score-board').innerText = "Contados: " + score;
+                    playCountSound(score);
+                    
+                    let reactionTime = performance.now() - lastTime;
+                    IA_Engine.analyzeAndAdjust(reactionTime);
+                    lastTime = performance.now();
+
+                    if (score >= targetScore) {
+                        endMission();
+                    }
+                } else if (entity.type === 'alien') {
+                    // Mancha de tinta galáctica
+                    IA_Engine.registerError();
+                    triggerInkEffect();
+                }
+                break;
+            }
+        }
+    });
+
+    function triggerInkEffect() {
+        const ink = document.getElementById('ink-splat');
+        ink.style.opacity = '1';
+        setTimeout(() => { ink.style.opacity = '0'; }, 2000);
+    }
+
+    // Sonidos sintéticos Web Audio API
+    let audioCtx = null;
+    function initAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
+    function playLaserSound() {
+        initAudio(); if(!audioCtx) return;
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.18);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.18);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.18);
+    }
+
+    function playCountSound(number) {
+        initAudio(); if(!audioCtx) return;
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(260 + (number * 35), audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.32);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.32);
+    }
+
+    // Ciclo del motor de Render y Animación
+    function loop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (gameState === "GAMEPLAY") {
+            // Generación controlada por el ritmo adaptativo de la IA
+            if (Math.random() < IA_Engine.currentSpawnRate) {
+                let type = Math.random() > 0.30 ? 'meteorito' : 'alien'; // 30% marciano
+                entities.push(new SpaceEntity(type));
+            }
+
+            // Actualizar y dibujar entidades
+            entities.forEach(entity => {
+                entity.update();
+                entity.draw();
+            });
+            entities = entities.filter(entity => !entity.isDead);
+
+            // Dibujar el rayo láser
+            if (laserLine) {
+                ctx.save();
+                ctx.strokeStyle = '#ff007f';
+                ctx.lineWidth = 6 * laserLine.alpha;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = '#ff007f';
+                ctx.beginPath();
+                ctx.moveTo(laserLine.fromX, laserLine.fromY);
+                ctx.lineTo(laserLine.toX, laserLine.toY);
+                ctx.stroke();
+                ctx.restore();
+                
+                laserLine.alpha -= 0.08;
+                if (laserLine.alpha <= 0) laserLine = null;
+            }
+
+            drawPlayerShip();
+        }
+
+        requestAnimationFrame(loop);
+    }
+
+    // Transición de Pantallas
+    function startMission() {
+        initAudio();
+        score = 0;
+        entities = [];
+        document.getElementById('score-board').innerText = "Contados: 0";
+        document.getElementById('intro-screen').style.display = 'none';
+        gameState = "GAMEPLAY";
+        lastTime = performance.now();
+    }
+
+    function endMission() {
+        gameState = "VICTORY";
+        document.getElementById('final-count').innerText = "¡Contaste " + score + " planetas!";
+        document.getElementById('victory-screen').style.display = 'flex';
+    }
+
+    function reportBack() {
+        if (window.parent) {
+            window.parent.postMessage({
+                status: 'success',
+                gameId: 'math_01',
+                finalScore: score,
+                difficultyReached: targetScore === 12 ? 2 : 1
+            }, '*');
+        }
+        alert("¡Misión completada! Datos reportados con éxito a la cabina principal.");
+        document.getElementById('victory-screen').style.display = 'none';
+        document.getElementById('intro-screen').style.display = 'flex';
+        gameState = "INTRO";
+    }
+
+    // Iniciar loop
+    loop();
+</script>
+</body>
+</html>
