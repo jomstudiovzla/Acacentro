@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Academy | ACACENTRO - Formación Tecnológica y Creativa</title>
+    <meta name="description" content="Plataforma educativa ACACENTRO Creative Academy: cursos de programación, Inteligencia Artificial, Bachillerato Tecnológico y diseño web en Caracas, Venezuela.">
+    <meta name="keywords" content="cursos tecnología, inteligencia artificial local, bachillerato, programación Venezuela, Caracas">
+    <meta name="author" content="ACACENTRO Creative Academy">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Creative Academy | ACACENTRO">
+    <meta property="og:description" content="Aprende habilidades digitales sin filtros: IA local, diseño, backend y Bachillerato Tecnológico.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/pocket-ia.png">
+    <!-- Google Fonts: Outfit (Titulares) e Inter (Lectura) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Estilo Brutalista -->
+    <header class="academy-header">
+        <div class="academy-header-container">
+            <a href="#" class="academy-logo">
+                <span class="logo-box">ACACENTRO</span>
+            </a>
+            <nav class="academy-nav" aria-label="Navegación principal">
+                <ul>
+                    <li><a href="#catalogo" class="academy-nav-link">Catálogo</a></li>
+                    <li><a href="#conocenos" class="academy-nav-link">Conócenos</a></li>
+                    <li><a href="login.html" class="academy-nav-link" id="nav-login-link">Mi Cuenta</a></li>
+                    <!-- Bachillerato con mini menú hover -->
+                    <li class="nav-item-dropdown" id="nav-bachillerato-item">
+                        <a href="bachillerato.html" class="academy-nav-link nav-bachillerato-trigger" aria-haspopup="true" aria-expanded="false" id="nav-bachillerato-trigger">
+                            Bachillerato
+                            <svg class="dropdown-arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </a>
+                        <div class="bachillerato-mini-menu" role="menu" aria-label="Programas de Bachillerato" id="bachillerato-mini-menu">
+                            <div class="mini-menu-header">
+                                <span class="mini-menu-tag">Bachillerato</span>
+                                <p class="mini-menu-desc">Formación secundaria con integración tecnológica</p>
+                            </div>
+                            <ul class="mini-menu-list" role="none">
+                                <li role="none"><a href="bachillerato.html#primer-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">1°</span><span>Primer Año — Fundamentos</span></a></li>
+                                <li role="none"><a href="bachillerato.html#segundo-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">2°</span><span>Segundo Año — Expansión</span></a></li>
+                                <li role="none"><a href="bachillerato.html#tercer-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">3°</span><span>Tercer Año — Especialización</span></a></li>
+                                <li role="none"><a href="bachillerato.html#cuarto-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">4°</span><span>Cuarto Año — Avanzado</span></a></li>
+                                <li role="none"><a href="bachillerato.html#quinto-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">5°</span><span>Quinto Año — Proyecto Final</span></a></li>
+                                <li role="none"><a href="bachillerato.html#sexto-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">6°</span><span>Sexto Año — Mención Profesional</span></a></li>
+                            </ul>
+                            <a href="bachillerato.html" class="mini-menu-cta" role="menuitem">Ver Programa Completo →</a>
+                        </div>
+                    </li>
+                    <!-- <li><a href="classroom.html" class="academy-nav-link btn-classroom-nav">Aula Virtual</a></li> -->
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Parallax backgrounds container (3D floating tech assets) -->
+    <div class="bg-3d-container" aria-hidden="true">
+        <!-- Floating abstract 3D elements styled via CSS -->
+        <div class="floating-tech-node node-1"></div>
+        <div class="floating-tech-node node-2"></div>
+    </div>
+
+    <main class="academy-main-content">
+        <!-- Hero & Intro -->
+        <section class="academy-hero">
+            <div class="container hero-brutalist">
+                <span class="academy-tagline">Estudios Tecnológicos de Vanguardia</span>
+                <h1 class="huge-brutalist-title">
+                    CREATIVE<br>
+                    <span class="accent-magenta">ACADEMY</span>
+                </h1>
+                <p class="brutalist-lead">
+                    Aprende habilidades digitales sin filtros ni rodeos teóricos. Programación, Inteligencia Artificial aplicada y Diseño de Interfaces avanzadas bajo un esquema de Brutalismo Limpio y proyectos reales.
+                </p>
+                <div class="hero-actions-brutalist">
+                    <a href="bachillerato.html" class="btn-brutalist btn-brutalist-yellow btn-massive-cta btn-interactive-bach">
+                        Bachillerato 🎓
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="transition: transform 0.3s ease;">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Course Catalog (Grid 3D) -->
+        <section class="catalog-section" id="catalogo">
+            <div class="container">
+                <h2 class="brutalist-section-title">Catálogo de Cursos</h2>
+                <div class="courses-grid-3d">
+                    <!-- Card 1: Pocket IA -->
+                    <div class="course-card-3d card-featured" id="card-pocket-ia">
+                        <div class="card-image-wrap">
+                            <img src="assets/pocket-ia.png" alt="Pocket IA — Modelos locales de IA" class="card-featured-img">
+                            <span class="course-tag tag-featured">Flagship</span>
+                        </div>
+                        <div class="card-body-brutalist">
+                            <h3 class="course-title-brutalist">Pocket IA</h3>
+                            <p class="course-subtitle-brutalist">Modelos locales de Inteligencia Artificial</p>
+                            <p class="course-desc-brutalist">
+                                Despliega modelos de lenguaje locales (LLMs) en hardware limitado sin pagar APIs externas. Crea chatbots autónomos e integraciones de IA 100% privadas.
+                            </p>
+                            <div class="card-meta-brutalist">
+                                <span class="meta-item">🔥 8 Módulos</span>
+                                <span class="meta-item">⏱️ 32 Horas</span>
+                            </div>
+                            <a href="#pocket-ia" class="btn-brutalist btn-brutalist-magenta btn-block">Ver Programa Completo</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Diseño UI/UX y Brutalismo Limpio -->
+                    <div class="course-card-3d">
+                        <div class="card-image-wrap static-preview">
+                            <div class="placeholder-graphic bg-cyan-mesh">
+                                <span>UI/UX</span>
+                            </div>
+                            <span class="course-tag tag-coming">Próximamente</span>
+                        </div>
+                        <div class="card-body-brutalist">
+                            <h3 class="course-title-brutalist">UI/UX Brutalismo</h3>
+                            <p class="course-subtitle-brutalist">Diseño Web de Vanguardia</p>
+                            <p class="course-desc-brutalist">
+                                Rompe el molde de los sitios corporativos monótonos. Aprende a utilizar espacios de aire, jerarquías extremas de tipografía y combinaciones de colores vibrantes en Figma.
+                            </p>
+                            <div class="card-meta-brutalist">
+                                <span class="meta-item">⚡ 6 Módulos</span>
+                                <span class="meta-item">⏱️ 24 Horas</span>
+                            </div>
+                            <button class="btn-brutalist btn-brutalist-disabled btn-block" disabled>Próxima Apertura</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Node.js & APIs Robustas -->
+                    <div class="course-card-3d">
+                        <div class="card-image-wrap static-preview">
+                            <div class="placeholder-graphic bg-magenta-mesh">
+                                <span>NODE.JS</span>
+                            </div>
+                            <span class="course-tag tag-coming">Próximamente</span>
+                        </div>
+                        <div class="card-body-brutalist">
+                            <h3 class="course-title-brutalist">Backend Moderno</h3>
+                            <p class="course-subtitle-brutalist">Node.js, Express y Seguridad</p>
+                            <p class="course-desc-brutalist">
+                                Desarrolla sistemas robustos del lado del servidor. Aprende a crear pasarelas de pago reales, webhooks para CRMs y esquemas de validación estrictos en arquitecturas modernas.
+                            </p>
+                            <div class="card-meta-brutalist">
+                                <span class="meta-item">🛠️ 10 Módulos</span>
+                                <span class="meta-item">⏱️ 40 Horas</span>
+                            </div>
+                            <button class="btn-brutalist btn-brutalist-disabled btn-block" disabled>Próxima Apertura</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Flagship Product Page (Pocket IA Landing Inmersiva) -->
+        <section class="flagship-product-page" id="pocket-ia">
+            <div class="container product-landing-grid">
+                
+                <!-- Left Details / Content -->
+                <div class="product-info-column">
+                    <span class="course-brand-tag">Curso Bandera</span>
+                    <h2 class="product-main-title">POCKET IA: Inferencia Local de Vanguardia</h2>
+                    
+                    <p class="product-pitch">
+                        ¿Cansado de pagar facturas costosas de OpenAI o depender de internet para tus proyectos inteligentes? En <strong>Pocket IA</strong> aprenderás paso a paso el arte de la optimización, cuantización y despliegue de modelos como Llama y Mistral directamente en tu computadora o en servidores locales económicos.
+                    </p>
+
+                    <!-- Video Trailer Box -->
+                    <div class="video-trailer-wrapper">
+                        <h3>Ver Tráiler del Curso</h3>
+                        <div class="video-container-brutalist">
+                            <!-- Native video mockup with overlay controls -->
+                            <div class="video-mockup-player">
+                                <div class="player-overlay">
+                                    <button class="play-btn-brutalist" id="btn-play-trailer">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                            <polygon points="5 3 19 12 5 21 5 3"/>
+                                        </svg>
+                                    </button>
+                                    <span class="trailer-duration">Tráiler Oficial (2:40 Min)</span>
+                                </div>
+                                <div class="video-playing-state" id="trailer-video-playing" style="display: none;">
+                                    <div class="video-running-bars">
+                                        <span>Video Reproduciéndose en Servidor Seguro...</span>
+                                        <button class="btn-brutalist btn-brutalist-white btn-sm" id="btn-stop-trailer">Pausar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Syllabus / Temario (Interactive Accordion) -->
+                    <div class="syllabus-brutalist-wrapper">
+                        <h3>Temario Detallado del Curso</h3>
+                        <p class="syllabus-intro-text">Haz clic en cada módulo para desplegar las lecciones y guías incluidas en el programa formativo.</p>
+                        
+                        <div class="accordion-container">
+                            
+                            <!-- Accordion Module 1 -->
+                            <div class="accordion-item">
+                                <button class="accordion-header" aria-expanded="false">
+                                    <span class="module-number">Módulo 1</span>
+                                    <span class="module-title">Introducción a la Inferencia y Modelos GGUF</span>
+                                    <span class="accordion-icon">+</span>
+                                </button>
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>Lección 1.1: Conceptos básicos de LLMs (CPU vs GPU)</li>
+                                        <li>Lección 1.2: El formato GGUF y arquitecturas de hardware</li>
+                                        <li>Lección 1.3: Descarga y carga de modelos desde Hugging Face</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Accordion Module 2 -->
+                            <div class="accordion-item">
+                                <button class="accordion-header" aria-expanded="false">
+                                    <span class="module-number">Módulo 2</span>
+                                    <span class="module-title">Cuantización y Optimización de Parámetros</span>
+                                    <span class="accordion-icon">+</span>
+                                </button>
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>Lección 2.1: ¿Qué es la cuantización de pesos (Q4_K_M vs Q8_0)?</li>
+                                        <li>Lección 2.2: Ajuste de contexto y temperatura en ejecución local</li>
+                                        <li>Lección 2.3: Medición de tokens por segundo y uso de VRAM</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Accordion Module 3 -->
+                            <div class="accordion-item">
+                                <button class="accordion-header" aria-expanded="false">
+                                    <span class="module-number">Módulo 3</span>
+                                    <span class="module-title">Creación de APIs Locales con Node.js</span>
+                                    <span class="accordion-icon">+</span>
+                                </button>
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>Lección 3.1: Configuración de Ollama y Llama.cpp en NodeJS</li>
+                                        <li>Lección 3.2: Creación de endpoints Express para streaming de respuestas</li>
+                                        <li>Lección 3.3: Implementación de historial de conversación (Chat Memory)</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Accordion Module 4 -->
+                            <div class="accordion-item">
+                                <button class="accordion-header" aria-expanded="false">
+                                    <span class="module-number">Módulo 4</span>
+                                    <span class="module-title">Proyecto Final: Despliegue de un Chatbot privado</span>
+                                    <span class="accordion-icon">+</span>
+                                </button>
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>Lección 4.1: Diseño de la interfaz de chat en brutalismo limpio</li>
+                                        <li>Lección 4.2: Asegurar acceso mediante tokens y restricciones de IP</li>
+                                        <li>Lección 4.3: Compilación y despliegue del sistema final</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side Visual / Highlight / Sticky Enroll -->
+                <div class="product-visual-column">
+                    <div class="sticky-product-box">
+                        <div class="visual-card-ia">
+                            <img src="assets/pocket-ia.png" alt="Pocket IA 3D Concept" class="visual-ia-img">
+                        </div>
+                        
+                        <div class="enroll-box-brutalist">
+                            <div class="price-block-brutalist">
+                                <span class="price-label">Pago Único</span>
+                                <span class="price-value">$89.00 USD</span>
+                                <span class="price-badge">Acceso de por Vida</span>
+                            </div>
+                            
+                            <ul class="enroll-benefits-list">
+                                <li>✨ Acceso completo al aula virtual y videos</li>
+                                <li>📁 Plantillas de código y guías vectoriales</li>
+                                <li>🎓 Certificado digital de aprobación</li>
+                                <li>💬 Comunidad exclusiva en Discord</li>
+                            </ul>
+
+                            <a href="checkout.html" class="btn-brutalist btn-brutalist-cyan btn-massive-cta" id="btn-enroll-now">
+                                Inscribirme Ahora
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                    <polyline points="12 5 19 12 12 19"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Sección: Conócenos (40 Años de Trayectoria) -->
+        <section class="catalog-section" id="conocenos" style="border-top: var(--brutalist-border-thick); background-color: var(--color-white); padding: 80px 20px;">
+            <div class="container" style="max-width: 1000px; margin: 0 auto;">
+                <h2 class="brutalist-section-title" style="background: var(--color-neon-yellow); color: var(--color-black); border: var(--brutalist-border-thin); font-family: var(--font-heading); font-weight: 900; font-size: 1.6rem; text-transform: uppercase; padding: 10px 24px; display: inline-block; margin-bottom: 28px; box-shadow: 4px 4px 0 var(--color-black); letter-spacing: -0.5px;">Conócenos</h2>
+                
+                <div class="conocenos-interactive-grid animate-on-scroll">
+                    <!-- Columna Izquierda: Consola Interactiva del Logo -->
+                    <div class="logo-interactive-console" id="logo-trigger-area">
+                        <div class="target-radial-glow"></div>
+                        <div class="radar-ping-ring"></div>
+                        <div class="radar-ping-ring-outer"></div>
+                        <div class="crosshair-indicator ch-top-left"></div>
+                        <div class="crosshair-indicator ch-top-right"></div>
+                        <div class="crosshair-indicator ch-bottom-left"></div>
+                        <div class="crosshair-indicator ch-bottom-right"></div>
+                        
+                        <img src="Logo/logo acacentro 3d.png" class="logo-3d-interactive" alt="ACACENTRO 3D Logo">
+                        
+                        <div class="console-overlay-badge">
+                            <span class="pulse-dot"></span> ESCANEAR LOGO
+                        </div>
+                    </div>
+                    
+                    <!-- Columna Derecha: Ventana Popover de la Trayectoria -->
+                    <div class="trajectory-popover-window" id="conocenos-popover">
+                        <!-- Overlay de Estado Inicial -->
+                        <div class="window-hover-prompt-overlay">
+                            <div class="lock-icon">📡</div>
+                            <h4>SISTEMA EN ESPERA</h4>
+                            <p>Mueve el cursor hacia el logo de ACACENTRO para sincronizar los archivos de trayectoria educativa.</p>
+                        </div>
+
+                        <!-- Topbar de la Ventana -->
+                        <div class="window-topbar">
+                            <div class="window-title-tag">
+                                <span class="win-icon">⚙</span> ACACENTRO_40_ANOS.EXE
+                            </div>
+                            <div class="window-actions">
+                                <span class="win-btn win-minimize"></span>
+                                <span class="win-btn win-maximize"></span>
+                                <span class="win-btn win-close"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Cuerpo de la Ventana -->
+                        <div class="window-body">
+                            <!-- Cabecera de Pestañas -->
+                            <div class="window-tabs-header">
+                                <button class="win-tab-btn active" data-tab="historia">
+                                    <span>01</span> Trayectoria
+                                </button>
+                                <button class="win-tab-btn" data-tab="evolucion">
+                                    <span>02</span> Evolución
+                                </button>
+                                <button class="win-tab-btn" data-tab="proposito">
+                                    <span>03</span> Futuro
+                                </button>
+                            </div>
+                            
+                            <!-- Contenidos de las Pestañas -->
+                            <div class="window-tab-content active" id="tab-historia">
+                                <div class="brutal-badge-cyan" style="background-color: var(--color-neon-cyan); font-family: var(--font-heading); font-weight: 900; font-size: 0.72rem; text-transform: uppercase; padding: 4px 8px; display: inline-block; align-self: flex-start; margin-bottom: 12px; border: var(--brutalist-border-thin); box-shadow: 2px 2px 0 var(--color-black);">40 AÑOS DE TRAYECTORIA</div>
+                                <h4 style="font-family: var(--font-heading); font-weight: 900; font-size: 1.25rem; margin-bottom: 12px;">Evolución y Compromiso Educativo</h4>
+                                <p style="font-family: var(--font-body); font-size: 0.95rem; line-height: 1.6; color: #222; margin: 0;">
+                                    Detrás de la innovación que hoy define a <strong>ACACENTRO</strong>, existe una base sólida de 40 años de trayectoria dedicados con orgullo a la educación de bachillerato para adultos. Durante cuatro décadas, nuestro compromiso ha sido el mismo: ofrecer una formación empática, accesible y de alta calidad para quienes decidieron apostar por su superación.
+                                </p>
+                            </div>
+                            
+                            <div class="window-tab-content" id="tab-evolucion">
+                                <div class="brutal-badge-magenta" style="background-color: var(--color-neon-magenta); color: var(--color-white); font-family: var(--font-heading); font-weight: 900; font-size: 0.72rem; text-transform: uppercase; padding: 4px 8px; display: inline-block; align-self: flex-start; margin-bottom: 12px; border: var(--brutalist-border-thin); box-shadow: 2px 2px 0 var(--color-black);">FORMACIÓN CONTINUA</div>
+                                <h4 style="font-family: var(--font-heading); font-weight: 900; font-size: 1.25rem; margin-bottom: 12px;">Transformación Educativa</h4>
+                                <p style="font-family: var(--font-body); font-size: 0.95rem; line-height: 1.6; color: #222; margin: 0;">
+                                    Esta experiencia nos ha enseñado a evolucionar. Hoy, proyectamos nuestra visión hacia el futuro transformando esa misma vocación formativa en herramientas de vanguardia, impulsando talleres especializados en Inteligencia Artificial y nuevas tecnologías diseñados para el mercado actual.
+                                </p>
+                            </div>
+                            
+                            <div class="window-tab-content" id="tab-proposito">
+                                <div class="brutal-badge-yellow" style="background-color: var(--color-neon-yellow); font-family: var(--font-heading); font-weight: 900; font-size: 0.72rem; text-transform: uppercase; padding: 4px 8px; display: inline-block; align-self: flex-start; margin-bottom: 12px; border: var(--brutalist-border-thin); box-shadow: 2px 2px 0 var(--color-black);">PROPÓSITO CLARO</div>
+                                <h4 style="font-family: var(--font-heading); font-weight: 900; font-size: 1.25rem; margin-bottom: 12px;">El Puente al Mañana</h4>
+                                <p style="font-family: var(--font-body); font-size: 0.95rem; line-height: 1.6; color: #222; margin: 0;">
+                                    Miramos hacia adelante con un propósito claro: seguir siendo el puente definitivo entre el potencial de nuestra comunidad y las habilidades competitivas que exige el mañana, respaldados por la solidez y la confianza que solo brindan cuatro décadas de evolución educativa.
+                                </p>
+                            </div>
+
+                            <!-- Barra de Estado e Indicadores -->
+                            <div class="window-footer-stats">
+                                <div class="stat-item-win">
+                                    <span class="stat-lbl">ESTADO:</span>
+                                    <span class="stat-val blinking-text">CONECTADO</span>
+                                </div>
+                                <div class="stat-item-win">
+                                    <span class="stat-lbl">EXPERIENCIA:</span>
+                                    <span class="stat-val text-neon-yellow">40 AÑOS</span>
+                                </div>
+                                <div class="stat-item-win">
+                                    <span class="stat-lbl">COBERTURA:</span>
+                                    <span class="stat-val text-neon-cyan">100% ADULTOS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </main>
+
+    <!-- Footer Brutalista -->
+    <footer class="academy-footer">
+        <div class="container footer-brutalist-grid">
+            <div class="footer-info">
+                <h3>ACACENTRO</h3>
+                <span class="footer-tag">Creative Academy</span>
+                <p>Formación sin límites en La California Norte, Caracas. Aprende lo que el mercado laboral busca hoy.</p>
+                <div class="footer-socials">
+                    <a href="https://wa.me/584241361642" target="_blank" rel="noopener noreferrer" class="btn-footer-social btn-footer-whatsapp" title="Escríbenos por WhatsApp">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.458 5.704 1.459h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        WhatsApp
+                    </a>
+                    <a href="https://www.instagram.com/institutoacacentro?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="btn-footer-social btn-footer-instagram" title="Síguenos en Instagram">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                        Instagram
+                    </a>
+                    <a href="mailto:institutoacacentro12@gmail.com" class="btn-footer-social btn-footer-email" title="Envíanos un correo">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        Correo
+                    </a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2026 ACACENTRO Creative Academy. Todos los derechos reservados. Diseñado por JOM Studio.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/bachillerato-menu.js"></script>
+    <script src="js/animations.js"></script>
+    <script>
+        /* Actualizar el texto del nav según sesión activa */
+        (function() {
+            var session = window.acacentroGetSession && window.acacentroGetSession();
+            if (session) {
+                var navLink = document.getElementById('nav-login-link');
+                if (navLink) {
+                    navLink.textContent = session.name.split(' ')[0];
+                    navLink.href = '#';
+                    navLink.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (confirm('¿Cerrar sesión?')) window.acacentroLogout();
+                    });
+                }
+            }
+        })();
+    </script>
+</body>
+</html>

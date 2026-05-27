@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bachillerato Tecnológico | ACACENTRO Creative Academy</title>
+    <meta name="description" content="Bachillerato Tecnológico en ACACENTRO: formación secundaria completa del 1° al 6° año con integración digital, programación y proyectos reales en Caracas.">
+    <meta name="keywords" content="bachillerato tecnológico, secundaria Venezuela, formación digital, Caracas">
+    <meta name="author" content="ACACENTRO Creative Academy">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Bachillerato Tecnológico | ACACENTRO">
+    <meta property="og:description" content="Formación secundaria completa con enfoque tecnológico, del 1° al 6° año.">
+    <meta property="og:type" content="website">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Brutalista (mismo que index) -->
+    <header class="academy-header">
+        <div class="academy-header-container">
+            <a href="index.html" class="academy-logo">
+                <span class="logo-box">ACACENTRO</span>
+            </a>
+            <nav class="academy-nav" aria-label="Navegación principal">
+                <ul>
+                    <li><a href="index.html#catalogo" class="academy-nav-link">Catálogo</a></li>
+                    <li><a href="index.html#conocenos" class="academy-nav-link">Conócenos</a></li>
+                    <!-- Bachillerato con mini menú hover -->
+                    <li class="nav-item-dropdown" id="nav-bachillerato-item">
+                        <a href="bachillerato.html" class="academy-nav-link active-link nav-bachillerato-trigger" aria-haspopup="true" aria-expanded="false" id="nav-bachillerato-trigger">
+                            Bachillerato
+                            <svg class="dropdown-arrow-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </a>
+                        <div class="bachillerato-mini-menu" role="menu" aria-label="Programas de Bachillerato" id="bachillerato-mini-menu">
+                            <div class="mini-menu-header">
+                                <span class="mini-menu-tag">Bachillerato</span>
+                                <p class="mini-menu-desc">Formación secundaria con integración tecnológica</p>
+                            </div>
+                            <ul class="mini-menu-list" role="none">
+                                <li role="none"><a href="#primer-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">1°</span><span>Primer Año — Fundamentos</span></a></li>
+                                <li role="none"><a href="#segundo-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">2°</span><span>Segundo Año — Expansión</span></a></li>
+                                <li role="none"><a href="#tercer-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">3°</span><span>Tercer Año — Especialización</span></a></li>
+                                <li role="none"><a href="#cuarto-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">4°</span><span>Cuarto Año — Avanzado</span></a></li>
+                                <li role="none"><a href="#quinto-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">5°</span><span>Quinto Año — Proyecto Final</span></a></li>
+                                <li role="none"><a href="#sexto-ano" class="mini-menu-item" role="menuitem"><span class="mini-menu-badge">6°</span><span>Sexto Año — Mención Profesional</span></a></li>
+                            </ul>
+                            <a href="#inscripcion" class="mini-menu-cta" role="menuitem">Pre-Inscribirse Ahora →</a>
+                        </div>
+                    </li>
+                    <!-- <li><a href="classroom.html" class="academy-nav-link btn-classroom-nav">Aula Virtual</a></li> -->
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ===== HERO ===== -->
+        <section class="bach-hero" aria-labelledby="bach-title">
+            <div class="container">
+                <div class="bach-hero-inner">
+                    <!-- Texto izquierdo -->
+                    <div class="bach-hero-text">
+                        <span class="bach-hero-tag">Bachillerato Tecnológico</span>
+                        <h1 class="bach-hero-title" id="bach-title">
+                            BACHILLE<br>
+                            <span class="accent-magenta">RATO</span>
+                        </h1>
+                        <p class="bach-hero-subtitle">
+                            Formación secundaria completa del 1° al 6° año, integrada con habilidades digitales, programación avanzada y pasantías profesionales reales para salir listo al mercado.
+                        </p>
+                        <!-- Estadísticas animadas -->
+                        <div class="bach-stats-row">
+                            <div class="bach-stat-box animate-on-scroll">
+                                <span class="bach-stat-number counter-animated" data-target="6" data-suffix="°">0°</span>
+                                <span class="bach-stat-label">Años de estudio</span>
+                            </div>
+                            <div class="bach-stat-box animate-on-scroll">
+                                <span class="bach-stat-number counter-animated" data-target="34" data-suffix="">0</span>
+                                <span class="bach-stat-label">Materias totales</span>
+                            </div>
+                            <div class="bach-stat-box animate-on-scroll">
+                                <span class="bach-stat-number counter-animated" data-target="15" data-suffix="">0</span>
+                                <span class="bach-stat-label">Materias técnicas</span>
+                            </div>
+                            <div class="bach-stat-box animate-on-scroll">
+                                <span class="bach-stat-number counter-animated" data-target="100" data-suffix="%">0%</span>
+                                <span class="bach-stat-label">Título Técnico</span>
+                            </div>
+                        </div>
+                        <!-- CTAs -->
+                        <div class="hero-actions-brutalist" style="margin-top:40px;">
+                            <a href="#inscripcion" class="btn-brutalist btn-brutalist-yellow">Pre-Inscribirse</a>
+                            <a href="#primer-ano" class="btn-brutalist btn-brutalist-white">Ver Programa</a>
+                        </div>
+                    </div>
+
+                    <!-- Visual derecha: pills flotantes de años -->
+                    <div class="bach-hero-visual" aria-hidden="true">
+                        <div class="bach-year-pill">1° Año — Fundamentos</div>
+                        <div class="bach-year-pill">2° Año — Expansión</div>
+                        <div class="bach-year-pill">3° Año — Especialización</div>
+                        <div class="bach-year-pill">4° Año — Avanzado</div>
+                        <div class="bach-year-pill">5° Año — Proyecto Final</div>
+                        <div class="bach-year-pill">6° Año — Mención Profesional</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PROGRAMA POR AÑOS ===== -->
+        <section class="bach-years-section" id="programa" aria-labelledby="bach-prog-title">
+            <div class="container">
+                <h2 class="brutalist-section-title" id="bach-prog-title">Programa por Año</h2>
+
+                <!-- 1° Año -->
+                <article class="bach-year-block animate-on-scroll" id="primer-ano">
+                    <div class="bach-year-sidebar">
+                        <span class="bach-year-number">1°</span>
+                        <span class="bach-year-label">Primer Año</span>
+                    </div>
+                    <div class="bach-year-content">
+                        <h3>Fundamentos Generales</h3>
+                        <p>Introducción a las ciencias básicas y primeros pasos en el mundo digital. El estudiante construye su base académica y descubre cómo la tecnología se aplica a cada materia.</p>
+                        <div class="bach-subjects-grid">
+                            <div class="bach-subject-chip">Matemática I</div>
+                            <div class="bach-subject-chip">Castellano y Literatura I</div>
+                            <div class="bach-subject-chip">Ciencias Naturales</div>
+                            <div class="bach-subject-chip">Historia de Venezuela</div>
+                            <div class="bach-subject-chip">Geografía General</div>
+                            <div class="bach-subject-chip chip-tech">Introducción a la Informática</div>
+                            <div class="bach-subject-chip chip-tech">Alfabetización Digital</div>
+                            <div class="bach-subject-chip">Educación Física I</div>
+                            <div class="bach-subject-chip">Arte y Cultura I</div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 2° Año -->
+                <article class="bach-year-block animate-on-scroll" id="segundo-ano">
+                    <div class="bach-year-sidebar">
+                        <span class="bach-year-number">2°</span>
+                        <span class="bach-year-label">Segundo Año</span>
+                    </div>
+                    <div class="bach-year-content">
+                        <h3>Expansión del Conocimiento</h3>
+                        <p>Se profundiza en ciencias y humanidades. Comienza el pensamiento computacional aplicado a problemas cotidianos con herramientas digitales reales.</p>
+                        <div class="bach-subjects-grid">
+                            <div class="bach-subject-chip">Matemática II</div>
+                            <div class="bach-subject-chip">Castellano y Literatura II</div>
+                            <div class="bach-subject-chip">Física Básica</div>
+                            <div class="bach-subject-chip">Química Básica</div>
+                            <div class="bach-subject-chip">Historia Universal</div>
+                            <div class="bach-subject-chip chip-tech">Pensamiento Computacional</div>
+                            <div class="bach-subject-chip chip-tech">Diseño Básico con Canva</div>
+                            <div class="bach-subject-chip">Inglés I</div>
+                            <div class="bach-subject-chip">Educación Física II</div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 3° Año -->
+                <article class="bach-year-block animate-on-scroll" id="tercer-ano">
+                    <div class="bach-year-sidebar">
+                        <span class="bach-year-number">3°</span>
+                        <span class="bach-year-label">Tercer Año</span>
+                    </div>
+                    <div class="bach-year-content">
+                        <h3>Especialización Técnica</h3>
+                        <p>El estudiante elige entre distintas áreas de énfasis tecnológico. Se inicia la programación real con Python y el desarrollo de proyectos con impacto social.</p>
+                        <div class="bach-subjects-grid">
+                            <div class="bach-subject-chip">Matemática III</div>
+                            <div class="bach-subject-chip">Física y Laboratorio</div>
+                            <div class="bach-subject-chip">Química y Laboratorio</div>
+                            <div class="bach-subject-chip chip-tech">Programación con Python I</div>
+                            <div class="bach-subject-chip chip-tech">Redes y Conectividad</div>
+                            <div class="bach-subject-chip chip-tech">Diseño Web Básico (HTML/CSS)</div>
+                            <div class="bach-subject-chip">Inglés II</div>
+                            <div class="bach-subject-chip">Ciencias Sociales III</div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 4° Año -->
+                <article class="bach-year-block animate-on-scroll" id="cuarto-ano">
+                    <div class="bach-year-sidebar">
+                        <span class="bach-year-number">4°</span>
+                        <span class="bach-year-label">Cuarto Año</span>
+                    </div>
+                    <div class="bach-year-content">
+                        <h3>Nivel Avanzado</h3>
+                        <p>Profundización en áreas científicas y tecnológicas avanzadas. El estudiante construye su primer portafolio digital y trabaja en proyectos de equipo reales.</p>
+                        <div class="bach-subjects-grid">
+                            <div class="bach-subject-chip">Cálculo Diferencial</div>
+                            <div class="bach-subject-chip">Física Avanzada</div>
+                            <div class="bach-subject-chip chip-tech">Programación con Python II</div>
+                            <div class="bach-subject-chip chip-tech">Bases de Datos (SQL básico)</div>
+                            <div class="bach-subject-chip chip-tech">Diseño UI/UX Introductorio</div>
+                            <div class="bach-subject-chip chip-tech">IA Aplicada (ChatGPT y herramientas)</div>
+                            <div class="bach-subject-chip">Inglés III — Técnico</div>
+                            <div class="bach-subject-chip">Economía y Emprendimiento</div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 5° Año -->
+                <article class="bach-year-block animate-on-scroll" id="quinto-ano">
+                    <div class="bach-year-sidebar">
+                        <span class="bach-year-number">5°</span>
+                        <span class="bach-year-label">Quinto Año</span>
+                    </div>
+                    <div class="bach-year-content">
+                        <h3>Proyecto Final y Graduación</h3>
+                        <p>El año culminante integra todo lo aprendido en un Proyecto de Grado tecnológico individual o grupal. Se completan los requisitos para obtener el título oficial de Bachiller.</p>
+                        <div class="bach-subjects-grid">
+                            <div class="bach-subject-chip">Cálculo Integral</div>
+                            <div class="bach-subject-chip">Estadística Aplicada</div>
+                            <div class="bach-subject-chip chip-tech">Proyecto Tecnológico Final</div>
+                            <div class="bach-subject-chip chip-tech">Desarrollo Full-Stack Básico</div>
+                            <div class="bach-subject-chip chip-tech">Seguridad Digital y Ética</div>
+                            <div class="bach-subject-chip chip-tech">Emprendimiento Digital</div>
+                            <div class="bach-subject-chip">Inglés IV — Conversacional</div>
+                            <div class="bach-subject-chip">Filosofía y Epistemología</div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 6° Año -->
+                <article class="bach-year-block animate-on-scroll" id="sexto-ano">
+                    <div class="bach-year-sidebar">
+                        <span class="bach-year-number">6°</span>
+                        <span class="bach-year-label">Sexto Año</span>
+                    </div>
+                    <div class="bach-year-content">
+                        <h3>Mención Profesional e Inserción Laboral</h3>
+                        <p>Año de profesionalización y prácticas externas. El estudiante se enfoca en metodologías ágiles, especialización técnica avanzada en desarrollo o diseño, y realiza su pasantía profesional en empresas aliadas.</p>
+                        <div class="bach-subjects-grid">
+                            <div class="bach-subject-chip chip-tech">Pasantías Profesionales (120 hrs)</div>
+                            <div class="bach-subject-chip chip-tech">Metodologías Ágiles y Scrum</div>
+                            <div class="bach-subject-chip chip-tech">Desarrollo de Portafolio Profesional</div>
+                            <div class="bach-subject-chip chip-tech">Especialización de Mención</div>
+                            <div class="bach-subject-chip">Oratoria y Liderazgo</div>
+                            <div class="bach-subject-chip">Proyecto de Grado Mención MTP</div>
+                            <div class="bach-subject-chip">Finanzas Personales y Tributarias</div>
+                            <div class="bach-subject-chip">Inglés Técnico Avanzado</div>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ===== INSCRIPCIÓN ===== -->
+        <section class="bach-enroll-section" id="inscripcion" aria-labelledby="bach-enroll-title">
+            <div class="container">
+                <div class="bach-enroll-grid">
+
+                    <!-- Info izquierda -->
+                    <div class="bach-enroll-info animate-on-scroll">
+                        <span class="bach-hero-tag">Pre-Inscripción Abierta</span>
+                        <h2 id="bach-enroll-title">¿Listo para inscribirte?</h2>
+                        <p>Completa el formulario de pre-inscripción y uno de nuestros asesores académicos te contactará en menos de 48 horas para orientarte sobre cupos, horarios y requisitos.</p>
+
+                        <ul class="bach-requirements-list">
+                            <li>Cédula de identidad del estudiante y representante</li>
+                            <li>Notas originales del año anterior cursado</li>
+                            <li>Partida de nacimiento del estudiante</li>
+                            <li>Foto carnet reciente (tamaño 2×2 o similar)</li>
+                            <li>Constancia de buena conducta del plantel anterior</li>
+                        </ul>
+
+                        <div class="bach-stat-box" style="text-align:left; padding:24px 28px; max-width:340px;">
+                            <span style="font-family:var(--font-heading); font-weight:900; font-size:0.85rem; text-transform:uppercase; color:var(--color-neon-magenta); display:block; margin-bottom:8px;">Horarios disponibles</span>
+                            <p style="font-size:0.95rem; margin:0; color:#374151;">
+                                📅 Turno mañana: 7:00 AM – 12:30 PM<br>
+                                📅 Turno tarde: 12:30 PM – 5:30 PM
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de Pre-Inscripción -->
+                    <div class="bach-form-card animate-on-scroll" style="animation-delay: 0.15s;">
+                        <h3>Formulario de Pre-Inscripción</h3>
+                        <p class="form-subtitle">Todos los campos son obligatorios. No representan compromiso de pago.</p>
+
+                        <form id="form-bach-preinscripcion" novalidate>
+                            <div class="bach-form-group">
+                                <label for="bach-student-name">Nombre completo del estudiante</label>
+                                <input type="text" id="bach-student-name" name="studentName" placeholder="Ej: María González" required autocomplete="name">
+                            </div>
+                            <div class="bach-form-group">
+                                <label for="bach-student-ci">Cédula de identidad (estudiante)</label>
+                                <input type="text" id="bach-student-ci" name="studentCI" placeholder="Ej: V-28.000.000" required>
+                            </div>
+                            <div class="bach-form-group">
+                                <label for="bach-year-apply">Año al que desea ingresar</label>
+                                <select id="bach-year-apply" name="yearApply" required>
+                                    <option value="" disabled selected>Seleccionar año…</option>
+                                    <option value="1">1° Año — Fundamentos</option>
+                                    <option value="2">2° Año — Expansión</option>
+                                    <option value="3">3° Año — Especialización</option>
+                                    <option value="4">4° Año — Avanzado</option>
+                                    <option value="5">5° Año — Proyecto Final</option>
+                                    <option value="6">6° Año — Mención Profesional</option>
+                                </select>
+                            </div>
+                            <div class="bach-form-group">
+                                <label for="bach-rep-name">Nombre del representante</label>
+                                <input type="text" id="bach-rep-name" name="repName" placeholder="Nombre y apellido" required autocomplete="name">
+                            </div>
+                            <div class="bach-form-group">
+                                <label for="bach-rep-phone">Teléfono / WhatsApp del representante</label>
+                                <input type="tel" id="bach-rep-phone" name="repPhone" placeholder="+58 412 0000000" required autocomplete="tel">
+                            </div>
+                            <div class="bach-form-group">
+                                <label for="bach-rep-email">Correo electrónico del representante</label>
+                                <input type="email" id="bach-rep-email" name="repEmail" placeholder="correo@ejemplo.com" required autocomplete="email">
+                            </div>
+                            <button type="submit" class="btn-brutalist btn-brutalist-yellow btn-block" id="btn-bach-submit">
+                                Enviar Pre-Inscripción
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                    <polyline points="12 5 19 12 12 19"/>
+                                </svg>
+                            </button>
+                        </form>
+
+                        <!-- Estado de éxito (oculto inicialmente) -->
+                        <div id="bach-form-success" style="display:none; text-align:center; padding:24px 0;">
+                            <div class="success-graphic">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" aria-hidden="true">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <h4 style="font-size:1.5rem; margin-bottom:8px;">¡Pre-Inscripción Recibida!</h4>
+                            <p style="font-size:0.92rem; color:#555;">Un asesor académico te contactará en menos de 48 horas al correo y teléfono indicados.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PREGUNTAS FRECUENTES ===== -->
+        <section class="catalog-section" aria-labelledby="faq-title">
+            <div class="container">
+                <h2 class="brutalist-section-title" id="faq-title">Preguntas Frecuentes</h2>
+                <div class="accordion-container" style="max-width:800px;">
+
+                    <div class="accordion-item animate-on-scroll">
+                        <button class="accordion-header" aria-expanded="false" id="faq-btn-1" aria-controls="faq-body-1">
+                            <span class="module-number">01</span>
+                            <span class="module-title">¿El título de Bachiller es reconocido oficialmente?</span>
+                            <span class="accordion-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="accordion-body" id="faq-body-1" role="region" aria-labelledby="faq-btn-1">
+                            <ul>
+                                <li>Sí. El programa sigue el currículo del Ministerio de Educación venezolano y otorga el título oficial de Bachiller en Ciencias y en Humanidades, según la mención elegida a partir del 3° año.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item animate-on-scroll">
+                        <button class="accordion-header" aria-expanded="false" id="faq-btn-2" aria-controls="faq-body-2">
+                            <span class="module-number">02</span>
+                            <span class="module-title">¿En qué año puede ingresar mi hijo/a si ya cursó otros años en otro plantel?</span>
+                            <span class="accordion-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="accordion-body" id="faq-body-2" role="region" aria-labelledby="faq-btn-2">
+                            <ul>
+                                <li>Pueden ingresar directamente al año que corresponde según sus notas certificadas. Solo se requiere la constancia de aprobación del año anterior y pasar por una evaluación diagnóstica de ingreso.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item animate-on-scroll">
+                        <button class="accordion-header" aria-expanded="false" id="faq-btn-3" aria-controls="faq-body-3">
+                            <span class="module-number">03</span>
+                            <span class="module-title">¿Qué diferencia a este bachillerato del bachillerato tradicional?</span>
+                            <span class="accordion-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="accordion-body" id="faq-body-3" role="region" aria-labelledby="faq-btn-3">
+                            <ul>
+                                <li>Además del currículo oficial, integramos 12 materias técnicas digitales progresivas (informática, programación, diseño, IA aplicada) que preparan al egresado para el mercado laboral del siglo XXI desde el primer año.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item animate-on-scroll">
+                        <button class="accordion-header" aria-expanded="false" id="faq-btn-4" aria-controls="faq-body-4">
+                            <span class="module-number">04</span>
+                            <span class="module-title">¿Tienen plataforma virtual para los estudiantes de bachillerato?</span>
+                            <span class="accordion-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="accordion-body" id="faq-body-4" role="region" aria-labelledby="faq-btn-4">
+                            <ul>
+                                <li>Sí. Los estudiantes de bachillerato tienen acceso al Aula Virtual de ACACENTRO donde pueden ver materiales, tareas, calificaciones y comunicarse con sus profesores. Disponible 24/7 desde cualquier dispositivo.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Brutalista -->
+    <footer class="academy-footer">
+        <div class="container footer-brutalist-grid">
+            <div class="footer-info">
+                <h3>ACACENTRO</h3>
+                <span class="footer-tag">Creative Academy</span>
+                <p>Formación sin límites en La California Norte, Caracas. Aprende lo que el mercado laboral busca hoy.</p>
+                <div class="footer-socials">
+                    <a href="https://wa.me/584241361642" target="_blank" rel="noopener noreferrer" class="btn-footer-social btn-footer-whatsapp" title="Escríbenos por WhatsApp">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.458 5.704 1.459h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        WhatsApp
+                    </a>
+                    <a href="https://www.instagram.com/institutoacacentro?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="btn-footer-social btn-footer-instagram" title="Síguenos en Instagram">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                        Instagram
+                    </a>
+                    <a href="mailto:institutoacacentro12@gmail.com" class="btn-footer-social btn-footer-email" title="Envíanos un correo">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        Correo
+                    </a>
+                </div>
+            </div>
+            <div class="footer-nav" style="display:flex; flex-direction:column; gap:8px;">
+                <a href="index.html" style="font-family:var(--font-heading); font-weight:800; font-size:0.9rem; color:var(--color-black); text-transform:uppercase; text-decoration:none;">← Volver al inicio</a>
+                <a href="index.html#catalogo" style="font-family:var(--font-heading); font-weight:800; font-size:0.9rem; color:var(--color-neon-magenta); text-transform:uppercase; text-decoration:none;">Catálogo de Cursos</a>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2026 ACACENTRO Creative Academy. Todos los derechos reservados. Diseñado por JOM Studio.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script src="js/bachillerato-menu.js"></script>
+    <script src="js/animations.js"></script>
+    <script>
+        /* Lógica específica de bachillerato.html */
+        (function () {
+            'use strict';
+
+            /* ---- Accordion FAQ (reutiliza la lógica del app.js) ---- */
+            const headers = document.querySelectorAll('.accordion-header');
+            headers.forEach(function (header) {
+                header.addEventListener('click', function () {
+                    const isExpanded = header.getAttribute('aria-expanded') === 'true';
+                    const body  = header.nextElementSibling;
+                    const icon  = header.querySelector('.accordion-icon');
+
+                    headers.forEach(function (h) {
+                        if (h !== header) {
+                            h.setAttribute('aria-expanded', 'false');
+                            h.nextElementSibling.style.display = 'none';
+                            h.querySelector('.accordion-icon').textContent = '+';
+                        }
+                    });
+
+                    if (!isExpanded) {
+                        header.setAttribute('aria-expanded', 'true');
+                        body.style.display = 'block';
+                        icon.textContent = '−';
+                    } else {
+                        header.setAttribute('aria-expanded', 'false');
+                        body.style.display = 'none';
+                        icon.textContent = '+';
+                    }
+                });
+            });
+
+            /* ---- Formulario de Pre-Inscripción ---- */
+            const form    = document.getElementById('form-bach-preinscripcion');
+            const success = document.getElementById('bach-form-success');
+
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const data = {
+                        studentName : document.getElementById('bach-student-name').value.trim(),
+                        studentCI   : document.getElementById('bach-student-ci').value.trim(),
+                        yearApply   : document.getElementById('bach-year-apply').value,
+                        repName     : document.getElementById('bach-rep-name').value.trim(),
+                        repPhone    : document.getElementById('bach-rep-phone').value.trim(),
+                        repEmail    : document.getElementById('bach-rep-email').value.trim(),
+                    };
+
+                    /* Validación básica */
+                    const allFilled = Object.values(data).every(function (v) { return v !== ''; });
+                    if (!allFilled) {
+                        alert('Por favor completa todos los campos antes de enviar.');
+                        return;
+                    }
+
+                    /* Guardar en LocalStorage (simulación; en producción → POST /api/bachillerato/preinscripcion) */
+                    localStorage.setItem('bach_preinscripcion', JSON.stringify(data));
+
+                    /* Mostrar estado de éxito */
+                    form.style.display = 'none';
+                    success.style.display = 'block';
+                });
+            }
+        })();
+    </script>
+
+</body>
+</html>

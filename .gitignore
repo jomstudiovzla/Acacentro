@@ -1,0 +1,7 @@
+# System Files
+.DS_Store
+Thumbs.db
+*.log
+
+# Local Database Backups (optional)
+# Keep local acacentro_users_db inside localStorage safe (doesn't get committed anyway as it's browser-only)

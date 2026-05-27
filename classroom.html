@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula Virtual Focus | Creative Academy - ACACENTRO</title>
+    
+    <!-- Google Fonts: Outfit (Titulares) e Inter (Lectura) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Estilo Brutalista -->
+    <header class="academy-header">
+        <div class="academy-header-container">
+            <div class="brand-block">
+                <a href="index.html" class="academy-logo">
+                    <span class="logo-box">ACACENTRO</span>
+                </a>
+                <span class="lms-badge" style="background-color: var(--color-neon-yellow); color: var(--color-black); border: var(--brutalist-border-thin);">Focus Mode</span>
+            </div>
+            <nav class="academy-nav">
+                <ul>
+                    <li><a href="index.html" class="academy-nav-link">Catálogo</a></li>
+                    <li><a href="index.html#pocket-ia" class="academy-nav-link">Volver al Curso</a></li>
+                    <li><a href="index.html" class="academy-nav-link">Portal ACACENTRO</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Classroom Grid -->
+    <main class="classroom-layout">
+        
+        <!-- Left Column: Secure Video Player & Lesson Details -->
+        <section class="video-lesson-side">
+            <div class="classroom-player-card">
+                <div class="secure-player" id="secure-player-container">
+                    <!-- Dynamic Watermark anti-piracy -->
+                    <div class="secure-watermark" id="player-watermark">C.A. ESTUDIANTE: PEDRO PÉREZ | IP: 190.204.88.230</div>
+                    
+                    <!-- Player State A: Play Action -->
+                    <div class="secure-player-overlay" id="player-initial-overlay">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0110 0v4"/>
+                        </svg>
+                        <h4 class="lock-label">Reproductor Asegurado</h4>
+                        <p class="lock-sub">Dominio Restringido para acacentro.com. Copias ilegales serán rastreadas.</p>
+                        <button class="btn-brutalist btn-brutalist-cyan btn-sm" id="btn-start-class">
+                            Iniciar Reproducción HD
+                        </button>
+                    </div>
+
+                    <!-- Player State B: Playing Video Simulation -->
+                    <div class="video-playing-mock" id="player-active-video" style="display: none;">
+                        <div class="video-running-bars" style="color: white; font-family: var(--font-heading); font-weight: 800;">
+                            <span id="playing-lesson-indicator">Reproduciendo: Lección 1.1</span>
+                            <div class="visualizer-bars">
+                                <!-- Dynamic CSS Bars mock -->
+                                <span class="vbar"></span>
+                                <span class="vbar"></span>
+                                <span class="vbar"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Player simulation controls bar -->
+                        <div class="mock-controls-bar">
+                            <span>▶ Pausar</span>
+                            <span>1080p HD</span>
+                            <span>04:12 / 12:30</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Lesson Text Descriptions -->
+            <div class="classroom-lesson-text">
+                <h2 id="active-classroom-title">Lección 1.1: Introducción a la inferencia local (CPU vs GPU)</h2>
+                <div class="lesson-meta-bar" style="margin-bottom: 24px; font-weight: 700; font-size: 0.9rem; display: flex; gap: 16px;">
+                    <span style="color: var(--color-neon-magenta);">Asignatura: Pocket IA</span>
+                    <span>Nivel: Intermedio</span>
+                </div>
+                <p id="active-classroom-desc">
+                    En esta clase teórica daremos los primeros pasos para comprender cómo corre un modelo de lenguaje de inteligencia artificial de forma nativa en tu computadora. Analizaremos los cuellos de botella de memoria y por qué la velocidad del modelo depende directamente del ancho de banda de la memoria de tu GPU (VRAM) en comparación con tu memoria RAM (CPU).
+                </p>
+                <div class="teacher-notes-brutalist" style="border: var(--brutalist-border-thin); background-color: var(--color-bg-gray); padding: 24px; margin-top: 32px;">
+                    <h4 style="margin-bottom: 12px; font-size: 1.1rem;">Notas del Mentor</h4>
+                    <p style="font-size: 0.95rem;">Antes de pasar a la siguiente clase práctica, asegúrate de descargar la plantilla de comandos de terminal de la pestaña **"Recursos de Apoyo"** en la barra lateral derecha.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Column: Navigation Tabs & Syllabus Checklist -->
+        <aside class="playlist-resources-side">
+            <div class="side-tabs-header">
+                <button class="tab-btn-brutalist active-tab" id="tab-playlist-btn">Lecciones</button>
+                <button class="tab-btn-brutalist" id="tab-resources-btn">Recursos</button>
+            </div>
+            
+            <div class="tab-content-area">
+                
+                <!-- Tab Content 1: Playlist Checklist -->
+                <div class="tab-pane-brutal" id="pane-playlist">
+                    <div class="playlist-wrapper" id="classroom-playlist-container">
+                        <!-- Loaded dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- Tab Content 2: Support Downloads -->
+                <div class="tab-pane-brutal" id="pane-resources" style="display: none;">
+                    <div class="resources-tab-list">
+                        
+                        <div class="resource-download-item">
+                            <div class="resource-meta-info">
+                                <span class="resource-title">Comandos de Terminal GGUF</span>
+                                <span class="resource-filetype">📁 TEXT / SHELL (.TXT)</span>
+                            </div>
+                            <a href="#descargar-comandos" class="btn-brutalist btn-brutalist-cyan btn-sm btn-resource-download" data-filename="comandos_gguf_ollama.txt">Descargar</a>
+                        </div>
+
+                        <div class="resource-download-item">
+                            <div class="resource-meta-info">
+                                <span class="resource-title">Plantilla API Express</span>
+                                <span class="resource-filetype">📦 NODEJS CODE (.ZIP)</span>
+                            </div>
+                            <a href="#descargar-api" class="btn-brutalist btn-brutalist-cyan btn-sm btn-resource-download" data-filename="template_express_ia.zip">Descargar</a>
+                        </div>
+
+                        <div class="resource-download-item">
+                            <div class="resource-meta-info">
+                                <span class="resource-title">Diseño de Chatbot UI</span>
+                                <span class="resource-filetype">🎨 FIGMA TEMPLATE (.FIG)</span>
+                            </div>
+                            <a href="#descargar-figma" class="btn-brutalist btn-brutalist-cyan btn-sm btn-resource-download" data-filename="chatbot_brutalist_figma.fig">Descargar</a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Floating Toast Alert -->
+    <div class="toast-brutal" id="classroom-toast" style="display: none;">
+        Mensaje del aula
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

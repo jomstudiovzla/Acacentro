@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin — Inscritos | ACACENTRO</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ── Reset y Variables ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --black:     #0A0A0A;
+            --white:     #FFFFFF;
+            --yellow:    #FFE600;
+            --cyan:      #11CAA0;
+            --magenta:   #FF2C6D;
+            --blue:      #005088;
+            --gray-bg:   #F4F4F0;
+            --gray-mid:  #E8E8E4;
+            --gray-text: #6B7280;
+            --border:    2px solid #0A0A0A;
+            --border-thin: 1px solid #0A0A0A;
+            --radius:    4px;
+            --shadow:    4px 4px 0 #0A0A0A;
+            --font-head: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--gray-bg);
+            color: var(--black);
+            min-height: 100vh;
+        }
+
+        /* ── Header Admin ── */
+        .admin-header {
+            background-color: var(--black);
+            color: var(--white);
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-logo-box {
+            background-color: var(--yellow);
+            color: var(--black);
+            font-family: var(--font-head);
+            font-weight: 900;
+            font-size: 0.9rem;
+            padding: 4px 10px;
+            border: var(--border-thin);
+        }
+
+        .admin-logo-text {
+            font-family: var(--font-head);
+            font-weight: 900;
+            font-size: 1rem;
+            letter-spacing: -0.5px;
+            color: var(--white);
+        }
+
+        .admin-nav-tabs {
+            display: flex;
+            gap: 0;
+            height: 100%;
+        }
+
+        .admin-tab {
+            height: 100%;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            border-left: var(--border-thin);
+            border-color: rgba(255,255,255,0.15);
+            transition: color 0.15s, background-color 0.15s;
+            cursor: pointer;
+            background: none;
+            border-top: none;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .admin-tab:hover  { color: var(--white); background-color: rgba(255,255,255,0.08); }
+        .admin-tab.active { color: var(--black); background-color: var(--yellow); }
+
+        .admin-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-user-badge {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* ── Layout principal ── */
+        .admin-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* ── Sección ── */
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.section-active {
+            display: block;
+        }
+
+        /* ── Título de sección ── */
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .section-title {
+            font-family: var(--font-head);
+            font-weight: 900;
+            font-size: 2rem;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .section-subtitle {
+            font-size: 0.88rem;
+            color: var(--gray-text);
+            margin-top: 4px;
+        }
+
+        /* ── Botones ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: -0.3px;
+            border: var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            text-decoration: none;
+            transition: box-shadow 0.1s ease, transform 0.1s ease;
+        }
+
+        .btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--black); }
+
+        .btn-yellow  { background-color: var(--yellow);  color: var(--black); box-shadow: var(--shadow); }
+        .btn-cyan    { background-color: var(--cyan);    color: var(--black); box-shadow: var(--shadow); }
+        .btn-black   { background-color: var(--black);   color: var(--white); box-shadow: var(--shadow); }
+        .btn-magenta { background-color: var(--magenta); color: var(--white); box-shadow: var(--shadow); }
+        .btn-white   { background-color: var(--white);   color: var(--black); box-shadow: var(--shadow); }
+
+        /* ── KPI Cards ── */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .kpi-card {
+            background-color: var(--white);
+            border: var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px 24px;
+        }
+
+        .kpi-label {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            color: var(--gray-text);
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-family: var(--font-head);
+            font-weight: 900;
+            font-size: 2.2rem;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        .kpi-value.kpi-yellow  { color: var(--black); }
+        .kpi-value.kpi-green   { color: var(--cyan); }
+        .kpi-value.kpi-red     { color: var(--magenta); }
+        .kpi-value.kpi-blue    { color: var(--blue); }
+
+        .kpi-sub {
+            font-size: 0.75rem;
+            color: var(--gray-text);
+            margin-top: 4px;
+        }
+
+        /* ── Controles de tabla ── */
+        .table-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            max-width: 340px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: var(--border);
+            border-radius: var(--radius);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            background-color: var(--white);
+            outline: none;
+        }
+
+        .search-box input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(17,202,160,0.15); }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-text);
+        }
+
+        .filter-select {
+            padding: 10px 14px;
+            border: var(--border);
+            border-radius: var(--radius);
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.8rem;
+            background-color: var(--white);
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* ── Tabla ── */
+        .table-wrapper {
+            background-color: var(--white);
+            border: var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        thead th {
+            background-color: var(--black);
+            color: var(--white);
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 12px 16px;
+            text-align: left;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        thead th:hover { background-color: #222; }
+
+        thead th .sort-arrow { margin-left: 4px; opacity: 0.5; }
+        thead th.sorted-asc  .sort-arrow,
+        thead th.sorted-desc .sort-arrow { opacity: 1; color: var(--yellow); }
+
+        tbody tr {
+            border-bottom: var(--border-thin);
+            transition: background-color 0.1s;
+        }
+
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background-color: var(--gray-bg); }
+
+        tbody td {
+            padding: 12px 16px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        /* Badges de estado */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            border: 1px solid currentColor;
+        }
+
+        .badge-active        { color: var(--cyan);    background-color: rgba(17,202,160,0.1); }
+        .badge-pending       { color: #D97706;         background-color: rgba(217,119,6,0.1); }
+        .badge-verified      { color: var(--blue);    background-color: rgba(0,80,136,0.1); }
+        .badge-not-verified  { color: var(--magenta); background-color: rgba(255,44,109,0.1); }
+
+        /* Badge de método de pago */
+        .method-badge {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: var(--radius);
+            background-color: var(--gray-bg);
+            border: var(--border-thin);
+        }
+
+        /* Comprobante miniatura o indicador */
+        .comprobante-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .comprobante-thumb {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            border: var(--border-thin);
+            border-radius: var(--radius);
+            cursor: pointer;
+        }
+
+        .comprobante-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--gray-bg);
+            border: var(--border-thin);
+            border-radius: var(--radius);
+            font-size: 1.2rem;
+        }
+
+        .comprobante-name {
+            font-size: 0.78rem;
+            color: var(--gray-text);
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Botones de acción de fila */
+        .row-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-row {
+            padding: 5px 10px;
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            border: var(--border-thin);
+            border-radius: var(--radius);
+            cursor: pointer;
+            background-color: var(--white);
+            transition: background-color 0.1s;
+        }
+
+        .btn-row:hover { background-color: var(--gray-bg); }
+        .btn-row-approve { color: var(--cyan); border-color: var(--cyan); }
+        .btn-row-approve:hover { background-color: rgba(17,202,160,0.1); }
+        .btn-row-view { color: var(--blue); border-color: var(--blue); }
+        .btn-row-delete { color: var(--magenta); border-color: var(--magenta); }
+        .btn-row-delete:hover { background-color: rgba(255,44,109,0.08); }
+
+        /* Sin datos */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-text);
+        }
+
+        .empty-state-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
+        .empty-state h3 { font-family: var(--font-head); font-weight: 900; font-size: 1.4rem; margin-bottom: 8px; color: var(--black); }
+
+        /* ── Modal de comprobante ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0,0,0,0.75);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.visible { display: flex; }
+
+        .modal-card {
+            background-color: var(--white);
+            border: var(--border);
+            border-radius: var(--radius);
+            box-shadow: 8px 8px 0 var(--black);
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: var(--border);
+        }
+
+        .modal-title {
+            font-family: var(--font-head);
+            font-weight: 900;
+            font-size: 1.2rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: var(--border-thin);
+            border-radius: var(--radius);
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-img {
+            width: 100%;
+            border: var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .detail-item label {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--gray-text);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .detail-item p {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* ── Paginación ── */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-top: var(--border-thin);
+            font-size: 0.82rem;
+            color: var(--gray-text);
+        }
+
+        .pagination-btns { display: flex; gap: 8px; }
+
+        .page-btn {
+            padding: 6px 12px;
+            border: var(--border-thin);
+            border-radius: var(--radius);
+            background-color: var(--white);
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.78rem;
+            cursor: pointer;
+        }
+
+        .page-btn.active  { background-color: var(--black); color: var(--white); }
+        .page-btn:hover:not(.active) { background-color: var(--gray-bg); }
+
+        /* ── Tabs de la sección usuarios ── */
+        .inner-tabs {
+            display: flex;
+            border-bottom: var(--border);
+            margin-bottom: 20px;
+        }
+
+        .inner-tab-btn {
+            padding: 10px 20px;
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            color: var(--gray-text);
+        }
+
+        .inner-tab-btn.active {
+            color: var(--black);
+            border-bottom-color: var(--black);
+        }
+
+        /* ── Comprobantes Grid ── */
+        .comprobantes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+            margin-top: 10px;
+        }
+
+        .comprobante-card {
+            background-color: var(--white);
+            border: var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .comprobante-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 7px 7px 0 var(--black);
+        }
+
+        .comprobante-card-header {
+            background-color: var(--black);
+            color: var(--white);
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .comprobante-card-course {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .comprobante-card-preview {
+            height: 220px;
+            background-color: var(--gray-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: var(--border-thin);
+            position: relative;
+            overflow: hidden;
+            cursor: zoom-in;
+        }
+
+        .comprobante-card-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .comprobante-card-preview-placeholder {
+            font-size: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-text);
+        }
+
+        .comprobante-card-preview-placeholder span {
+            font-size: 0.78rem;
+            font-weight: 700;
+            font-family: var(--font-head);
+            text-transform: uppercase;
+        }
+
+        .comprobante-card-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1;
+        }
+
+        .comprobante-student-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border-bottom: 1px dashed var(--gray-mid);
+            padding-bottom: 10px;
+        }
+
+        .comprobante-student-name {
+            font-family: var(--font-head);
+            font-weight: 900;
+            font-size: 1.05rem;
+        }
+
+        .comprobante-student-meta {
+            font-size: 0.8rem;
+            color: var(--gray-text);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .comprobante-payment-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            font-size: 0.82rem;
+            padding-bottom: 4px;
+        }
+
+        .comprobante-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .comprobante-info-label {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            color: var(--gray-text);
+        }
+
+        .comprobante-info-value {
+            font-weight: 700;
+        }
+
+        .comprobante-card-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            border-top: var(--border-thin);
+            background-color: var(--gray-bg);
+        }
+
+        .btn-comp-action {
+            padding: 12px;
+            font-family: var(--font-head);
+            font-weight: 900;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background-color 0.15s ease;
+        }
+
+        .btn-comp-approve {
+            background-color: var(--cyan);
+            color: var(--black);
+            border-right: var(--border-thin);
+        }
+
+        .btn-comp-approve:hover {
+            background-color: #0fb18a;
+        }
+
+        .btn-comp-reject {
+            background-color: var(--magenta);
+            color: var(--white);
+        }
+
+        .btn-comp-reject:hover {
+            background-color: #e0225c;
+        }
+
+        .btn-comp-view-full {
+            grid-column: span 2;
+            background-color: var(--white);
+            color: var(--black);
+            border-top: var(--border-thin);
+        }
+
+        .btn-comp-view-full:hover {
+            background-color: var(--gray-mid);
+        }
+
+        @media (max-width: 768px) {
+            .admin-nav-tabs { display: none; }
+            .detail-grid { grid-template-columns: 1fr; }
+            .section-header { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════ HEADER ADMIN ══════════════ -->
+<header class="admin-header">
+    <div class="admin-header-logo">
+        <span class="admin-logo-box">ACACENTRO</span>
+        <span class="admin-logo-text">Admin Panel</span>
+    </div>
+
+    <nav class="admin-nav-tabs" aria-label="Secciones del panel">
+        <button class="admin-tab active" id="tab-inscritos" onclick="showSection('inscritos')">Inscritos</button>
+        <button class="admin-tab" id="tab-usuarios"  onclick="showSection('usuarios')">Usuarios</button>
+        <button class="admin-tab" id="tab-bachillerato" onclick="showSection('bachillerato')">Bachillerato</button>
+        <button class="admin-tab" id="tab-comprobantes" onclick="showSection('comprobantes')">Comprobantes</button>
+    </nav>
+
+    <div class="admin-header-actions">
+        <span class="admin-user-badge" id="admin-user-name">Cargando…</span>
+        <a href="../index.html" class="btn btn-yellow" style="padding:6px 14px; font-size:0.75rem;">← Sitio</a>
+    </div>
+</header>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<main class="admin-main">
+
+    <!-- ═══════ SECCIÓN: INSCRITOS ═══════ -->
+    <section class="admin-section section-active" id="section-inscritos" aria-labelledby="inscritos-title">
+
+        <div class="section-header">
+            <div>
+                <h1 class="section-title" id="inscritos-title">Inscritos</h1>
+                <p class="section-subtitle">Listado de todas las inscripciones recibidas con sus comprobantes de pago.</p>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn btn-cyan" id="btn-export-inscripciones-csv" onclick="exportInscripcionesCSV()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Descargar CSV
+                </button>
+                <button class="btn btn-yellow" onclick="loadDemoData()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                    Cargar Datos Demo
+                </button>
+            </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-grid" id="kpi-inscritos">
+            <div class="kpi-card">
+                <div class="kpi-label">Total Inscritos</div>
+                <div class="kpi-value kpi-yellow" id="kpi-total">0</div>
+                <div class="kpi-sub">Todas las inscripciones</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Activos / Aprobados</div>
+                <div class="kpi-value kpi-green" id="kpi-active">0</div>
+                <div class="kpi-sub">Comprobante verificado</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Pendiente Revisión</div>
+                <div class="kpi-value kpi-red" id="kpi-pending">0</div>
+                <div class="kpi-sub">Sin verificar</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Ingresos Estimados</div>
+                <div class="kpi-value kpi-blue" id="kpi-revenue">$0</div>
+                <div class="kpi-sub">Solo inscritos activos</div>
+            </div>
+        </div>
+
+        <!-- Controles de tabla -->
+        <div class="table-controls">
+            <div class="search-box">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="search-inscritos" placeholder="Buscar por nombre, email o curso…" oninput="filterTable()">
+            </div>
+            <select class="filter-select" id="filter-estado" onchange="filterTable()">
+                <option value="">Todos los estados</option>
+                <option value="active">Activos</option>
+                <option value="pending_review">Pendientes</option>
+                <option value="expired">Expirados</option>
+                <option value="refunded">Reembolsados</option>
+            </select>
+            <select class="filter-select" id="filter-metodo" onchange="filterTable()">
+                <option value="">Todos los métodos</option>
+                <option value="card">Tarjeta</option>
+                <option value="paypal">PayPal</option>
+                <option value="transfer">Transferencia</option>
+                <option value="zelle">Zelle/Cripto</option>
+            </select>
+        </div>
+
+        <!-- Tabla de inscritos -->
+        <div class="table-wrapper">
+            <table id="table-inscritos" aria-label="Tabla de inscritos">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)" title="Ordenar por ID">
+                            ID <span class="sort-arrow">↕</span>
+                        </th>
+                        <th onclick="sortTable(1)">Estudiante <span class="sort-arrow">↕</span></th>
+                        <th onclick="sortTable(2)">Email <span class="sort-arrow">↕</span></th>
+                        <th onclick="sortTable(3)">Curso <span class="sort-arrow">↕</span></th>
+                        <th onclick="sortTable(4)">Método <span class="sort-arrow">↕</span></th>
+                        <th onclick="sortTable(5)">Monto <span class="sort-arrow">↕</span></th>
+                        <th>Comprobante</th>
+                        <th onclick="sortTable(7)">Estado <span class="sort-arrow">↕</span></th>
+                        <th onclick="sortTable(8)">Fecha <span class="sort-arrow">↕</span></th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-inscritos">
+                    <!-- Generado dinámicamente -->
+                </tbody>
+            </table>
+
+            <div id="empty-inscritos" class="empty-state" style="display:none;">
+                <span class="empty-state-icon">📋</span>
+                <h3>Sin inscritos todavía</h3>
+                <p>Cuando alguien complete el checkout, aparecerá aquí.<br>Haz clic en "Cargar Datos Demo" para ver un ejemplo.</p>
+            </div>
+
+            <div class="pagination" id="pagination-inscritos">
+                <span id="pagination-info">Mostrando 0 de 0</span>
+                <div class="pagination-btns" id="pagination-btns"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ SECCIÓN: USUARIOS ═══════ -->
+    <section class="admin-section" id="section-usuarios" aria-labelledby="usuarios-title">
+
+        <div class="section-header">
+            <div>
+                <h1 class="section-title" id="usuarios-title">Usuarios</h1>
+                <p class="section-subtitle">Todos los usuarios registrados en el sistema de login.</p>
+            </div>
+            <button class="btn btn-cyan" onclick="exportUsuariosCSV()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Descargar CSV Usuarios
+            </button>
+        </div>
+
+        <div class="kpi-grid" id="kpi-usuarios">
+            <div class="kpi-card">
+                <div class="kpi-label">Total Usuarios</div>
+                <div class="kpi-value kpi-yellow" id="kpi-u-total">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Estudiantes</div>
+                <div class="kpi-value kpi-green" id="kpi-u-students">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Profesores</div>
+                <div class="kpi-value kpi-blue" id="kpi-u-teachers">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Directores / Admin</div>
+                <div class="kpi-value kpi-red" id="kpi-u-admins">0</div>
+            </div>
+        </div>
+
+        <!-- Registrar Profesor Box (Exclusivo Admin) -->
+        <div class="kpi-card" style="margin-bottom: 28px; max-width: 600px;">
+            <h3 style="font-family: var(--font-head); font-weight: 900; margin-bottom: 12px; font-size: 1.15rem; text-transform: uppercase; color: var(--black);">➕ Registrar Nuevo Profesor</h3>
+            <form id="form-add-teacher" style="display: flex; flex-direction: column; gap: 12px;" novalidate>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-family: var(--font-head); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; color: var(--gray-text);">Nombre Completo</label>
+                        <input type="text" id="add-t-name" placeholder="Ej: Prof. Alejandro" style="padding: 8px 12px; border: var(--border-thin); border-radius: var(--radius); font-family: var(--font-body); font-size: 0.85rem;" required>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-family: var(--font-head); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; color: var(--gray-text);">Correo Electrónico</label>
+                        <input type="email" id="add-t-email" placeholder="profesor@acacentro.com" style="padding: 8px 12px; border: var(--border-thin); border-radius: var(--radius); font-family: var(--font-body); font-size: 0.85rem;" required>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-family: var(--font-head); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; color: var(--gray-text);">Teléfono</label>
+                        <input type="tel" id="add-t-phone" placeholder="+58 412-0000000" style="padding: 8px 12px; border: var(--border-thin); border-radius: var(--radius); font-family: var(--font-body); font-size: 0.85rem;">
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-family: var(--font-head); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; color: var(--gray-text);">Contraseña Inicial</label>
+                        <input type="password" id="add-t-password" placeholder="Mínimo 8 caracteres" style="padding: 8px 12px; border: var(--border-thin); border-radius: var(--radius); font-family: var(--font-body); font-size: 0.85rem;" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-cyan" style="align-self: flex-start; padding: 8px 16px; font-size: 0.75rem; margin-top: 4px;">
+                    Crear Cuenta de Profesor
+                </button>
+            </form>
+        </div>
+
+        <div class="table-wrapper">
+            <table aria-label="Tabla de usuarios">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Rol</th>
+                        <th>Activo</th>
+                        <th>Fecha Registro</th>
+                        <th>Último Login</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-usuarios">
+                    <!-- Generado dinámicamente -->
+                </tbody>
+            </table>
+            <div id="empty-usuarios" class="empty-state" style="display:none;">
+                <span class="empty-state-icon">👥</span>
+                <h3>Sin usuarios registrados</h3>
+                <p>Los usuarios aparecerán aquí cuando se registren en <a href="../login.html">login.html</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ SECCIÓN: BACHILLERATO ═══════ -->
+    <section class="admin-section" id="section-bachillerato" aria-labelledby="bach-admin-title">
+        <div class="section-header">
+            <div>
+                <h1 class="section-title" id="bach-admin-title">Pre-Inscripciones Bachillerato</h1>
+                <p class="section-subtitle">Solicitudes recibidas del formulario de bachillerato.</p>
+            </div>
+            <button class="btn btn-cyan" onclick="exportBachilleratoCSV()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Descargar CSV
+            </button>
+        </div>
+
+        <div class="table-wrapper">
+            <table aria-label="Pre-inscripciones bachillerato">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estudiante</th>
+                        <th>C.I. Estudiante</th>
+                        <th>Año Solicitado</th>
+                        <th>Representante</th>
+                        <th>Teléfono</th>
+                        <th>Correo Representante</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-bachillerato">
+                    <!-- Generado dinámicamente -->
+                </tbody>
+            </table>
+            <div id="empty-bachillerato" class="empty-state" style="display:none;">
+                <span class="empty-state-icon">🎓</span>
+                <h3>Sin pre-inscripciones todavía</h3>
+                <p>Las solicitudes del formulario de <a href="../bachillerato.html">bachillerato.html</a> aparecerán aquí.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ SECCIÓN: COMPROBANTES DE PAGO ═══════ -->
+    <section class="admin-section" id="section-comprobantes" aria-labelledby="comprobantes-title">
+        <div class="section-header">
+            <div>
+                <h1 class="section-title" id="comprobantes-title">Comprobantes de Pago</h1>
+                <p class="section-subtitle">Verifica y valida las capturas de pago enviadas por los estudiantes (Zelle, PayPal, Pago Móvil, etc.).</p>
+            </div>
+        </div>
+
+        <div class="kpi-grid" id="kpi-comprobantes">
+            <div class="kpi-card">
+                <div class="kpi-label">Pendientes de Revisión</div>
+                <div class="kpi-value kpi-red" id="kpi-comp-pending">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Aprobados</div>
+                <div class="kpi-value kpi-green" id="kpi-comp-approved">0</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Rechazados</div>
+                <div class="kpi-value kpi-yellow" id="kpi-comp-rejected">0</div>
+            </div>
+        </div>
+
+        <!-- Filtros rápidos para Comprobantes -->
+        <div class="filter-bar" style="margin-bottom: 24px; display: flex; gap: 16px; flex-wrap: wrap; background-color: var(--white); border: var(--border); padding: 14px 16px; border-radius: var(--radius); box-shadow: var(--shadow);">
+            <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
+                <label for="filter-comp-metodo" style="font-family: var(--font-head); font-weight: 800; font-size: 0.8rem; text-transform: uppercase;">Método:</label>
+                <select id="filter-comp-metodo" onchange="renderComprobantes()" style="padding: 6px 12px; border: var(--border-thin); border-radius: var(--radius); font-family: var(--font-head); font-weight: 800; background: var(--white); cursor: pointer; outline: none;">
+                    <option value="">Todos los métodos</option>
+                    <option value="zelle">Zelle</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="transfer">Transferencia</option>
+                    <option value="pago_movil">Pago Móvil</option>
+                </select>
+            </div>
+            <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
+                <label for="filter-comp-estado" style="font-family: var(--font-head); font-weight: 800; font-size: 0.8rem; text-transform: uppercase;">Estado:</label>
+                <select id="filter-comp-estado" onchange="renderComprobantes()" style="padding: 6px 12px; border: var(--border-thin); border-radius: var(--radius); font-family: var(--font-head); font-weight: 800; background: var(--white); cursor: pointer; outline: none;">
+                    <option value="">Todos los estados</option>
+                    <option value="pending_review" selected>Pendiente de Revisión</option>
+                    <option value="active">Aprobado / Activo</option>
+                    <option value="rejected">Rechazado</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Galería/Grilla de Tarjetas de Comprobante -->
+        <div class="comprobantes-grid" id="comprobantes-grid-container">
+            <!-- Generado dinámicamente -->
+        </div>
+
+        <div id="empty-comprobantes" class="empty-state" style="display:none;">
+            <span class="empty-state-icon">💳</span>
+            <h3>Sin comprobantes cargados</h3>
+            <p>No se encontraron comprobantes de pago bajo los criterios seleccionados.</p>
+        </div>
+    </section>
+
+</main>
+
+<!-- ══════════════ MODAL: DETALLE DE INSCRIPCIÓN ══════════════ -->
+<div class="modal-overlay" id="modal-detalle" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-title">Detalle de Inscripción</h2>
+            <button class="modal-close" id="btn-modal-close" onclick="closeModal()" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <!-- Generado dinámicamente -->
+        </div>
+    </div>
+</div>
+
+<script>
+/* ============================================================
+   ACACENTRO Admin Panel — Script Principal
+   ============================================================ */
+'use strict';
+
+const STORAGE_ENROLLMENTS = 'acacentro_enrollments_db';
+const STORAGE_USERS       = 'acacentro_users_db';
+const STORAGE_BACH        = 'bach_preinscripciones_db';
+
+/* ── Helpers de localStorage ── */
+function getLS(key) {
+    try { return JSON.parse(localStorage.getItem(key) || '[]'); }
+    catch { return []; }
+}
+
+function setLS(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+}
+
+/* ── Formatear fecha ── */
+function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('es-VE', { day:'2-digit', month:'2-digit', year:'numeric' })
+        + ' ' + d.toLocaleTimeString('es-VE', { hour:'2-digit', minute:'2-digit' });
+}
+
+/* ── Estado actual del usuario y validación de seguridad ── */
+const session = (function() {
+    try { return JSON.parse(localStorage.getItem('acacentro_session') || 'null'); }
+    catch { return null; }
+})();
+
+if (!session || session.role !== 'owner') {
+    alert('⚠️ Acceso denegado. Este panel está restringido al Administrador (owner).');
+    window.location.href = '../login.html';
+}
+
+document.getElementById('admin-user-name').textContent = session
+    ? `${session.name.split(' ')[0]} (${session.role})`
+    : 'Visitante';
+
+/* ══════════════════════
+   NAVEGACIÓN DE SECCIONES
+══════════════════════ */
+function showSection(name) {
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('section-active'));
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+
+    document.getElementById('section-' + name).classList.add('section-active');
+    document.getElementById('tab-' + name).classList.add('active');
+
+    if (name === 'inscritos')     renderInscritos();
+    if (name === 'usuarios')      renderUsuarios();
+    if (name === 'bachillerato')  renderBachillerato();
+    if (name === 'comprobantes')  renderComprobantes();
+}
+
+/* ══════════════════════
+   DATOS DEMO
+══════════════════════ */
+function loadDemoData() {
+    const demo = [
+        { id:'ENR-001-DEMO', studentName:'María González', email:'maria.gonzalez@gmail.com', phone:'+58 412-1234567', course:'Pocket IA', courseSlug:'pocket-ia', paymentMethod:'transfer', amountUSD:89, transferRef:'REF-20260526-001', comprobanteName:'comprobante_maria.jpg', comprobanteType:'image/jpeg', comprobanteSizeKB:'245.3', comprobanteB64: null, enrolledAt:'2026-05-26T10:15:00.000Z', status:'active' },
+        { id:'ENR-002-DEMO', studentName:'Carlos Rodríguez', email:'carlos.rod@hotmail.com', phone:'+58 424-9876543', course:'Pocket IA', courseSlug:'pocket-ia', paymentMethod:'zelle', amountUSD:89, transferRef:'ZELLE-87', comprobanteName:'pago_carlos.png', comprobanteType:'image/png', comprobanteSizeKB:'312.7', comprobanteB64: null, enrolledAt:'2026-05-25T14:30:00.000Z', status:'active' },
+        { id:'ENR-003-DEMO', studentName:'Ana Martínez', email:'ana.martinez@gmail.com', phone:'+58 416-5554433', course:'UI/UX Brutalismo', courseSlug:'ui-ux-brutalismo', paymentMethod:'card', amountUSD:79, transferRef:'', comprobanteName:'', comprobanteType:'', comprobanteSizeKB:'', comprobanteB64: null, enrolledAt:'2026-05-26T09:05:00.000Z', status:'pending_review' },
+        { id:'ENR-004-DEMO', studentName:'Luis Pérez', email:'lperez@yahoo.com', phone:'+58 412-7778899', course:'Backend Moderno', courseSlug:'backend-moderno', paymentMethod:'paypal', amountUSD:99, transferRef:'PAYPAL-TX-48291', comprobanteName:'recibo_paypal_luis.pdf', comprobanteType:'application/pdf', comprobanteSizeKB:'155.4', comprobanteB64: null, enrolledAt:'2026-05-24T11:45:00.000Z', status:'active' },
+        { id:'ENR-005-DEMO', studentName:'Sofía Hernández', email:'sofia.hndz@gmail.com', phone:'+58 426-3332211', course:'Pocket IA', courseSlug:'pocket-ia', paymentMethod:'transfer', amountUSD:89, transferRef:'REF-20260526-002', comprobanteName:'captura_sofia.png', comprobanteType:'image/png', comprobanteSizeKB:'198.6', comprobanteB64: null, enrolledAt:'2026-05-26T16:22:00.000Z', status:'pending_review' },
+    ];
+
+    const existing = getLS(STORAGE_ENROLLMENTS);
+    const ids = new Set(existing.map(e => e.id));
+    demo.forEach(d => { if (!ids.has(d.id)) existing.push(d); });
+    setLS(STORAGE_ENROLLMENTS, existing);
+    renderInscritos();
+}
+
+/* ══════════════════════
+   INSCRITOS: RENDER
+══════════════════════ */
+let allEnrollments = [];
+let filteredEnrollments = [];
+let sortColIdx = 8;
+let sortAsc = false;
+let currentPage = 1;
+const PAGE_SIZE = 20;
+
+function renderInscritos() {
+    allEnrollments = getLS(STORAGE_ENROLLMENTS);
+
+    /* KPIs */
+    const total   = allEnrollments.length;
+    const active  = allEnrollments.filter(e => e.status === 'active').length;
+    const pending = allEnrollments.filter(e => e.status === 'pending_review').length;
+    const revenue = allEnrollments
+        .filter(e => e.status === 'active')
+        .reduce((sum, e) => sum + (parseFloat(e.amountUSD) || 0), 0);
+
+    document.getElementById('kpi-total').textContent   = total;
+    document.getElementById('kpi-active').textContent  = active;
+    document.getElementById('kpi-pending').textContent = pending;
+    document.getElementById('kpi-revenue').textContent = '$' + revenue.toFixed(2);
+
+    filterTable();
+}
+
+function filterTable() {
+    const q      = document.getElementById('search-inscritos').value.toLowerCase();
+    const estado = document.getElementById('filter-estado').value;
+    const metodo = document.getElementById('filter-metodo').value;
+
+    filteredEnrollments = allEnrollments.filter(e => {
+        const matchQ = !q ||
+            (e.studentName || '').toLowerCase().includes(q) ||
+            (e.email || '').toLowerCase().includes(q) ||
+            (e.course || '').toLowerCase().includes(q);
+        const matchEstado = !estado || e.status === estado;
+        const matchMetodo = !metodo || e.paymentMethod === metodo;
+        return matchQ && matchEstado && matchMetodo;
+    });
+
+    currentPage = 1;
+    renderTablePage();
+}
+
+function renderTablePage() {
+    const tbody = document.getElementById('tbody-inscritos');
+    const empty = document.getElementById('empty-inscritos');
+    const paginInfo = document.getElementById('pagination-info');
+    const paginBtns = document.getElementById('pagination-btns');
+
+    if (filteredEnrollments.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display  = 'block';
+        paginInfo.textContent = 'Mostrando 0 de 0';
+        paginBtns.innerHTML = '';
+        return;
+    }
+
+    empty.style.display = 'none';
+
+    const totalPages = Math.ceil(filteredEnrollments.length / PAGE_SIZE);
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const page  = filteredEnrollments.slice(start, start + PAGE_SIZE);
+
+    tbody.innerHTML = page.map((e, i) => {
+        const globalIdx = start + i;
+
+        /* Badge estado */
+        const statusMap = {
+            active        : '<span class="badge badge-active">✓ Activo</span>',
+            pending_review: '<span class="badge badge-pending">⏳ Pendiente</span>',
+            expired       : '<span class="badge" style="color:#888; border-color:#888;">Expirado</span>',
+            refunded      : '<span class="badge badge-not-verified">↩ Reembolsado</span>',
+        };
+
+        /* Comprobante */
+        let comprobanteHTML = '<span style="color:var(--gray-text); font-size:0.78rem;">Sin comprobante</span>';
+        if (e.comprobanteName) {
+            const isImg = e.comprobanteType && e.comprobanteType.startsWith('image/');
+            const isPdf = e.comprobanteType === 'application/pdf';
+            const thumb = (e.comprobanteB64 && isImg)
+                ? `<img src="${e.comprobanteB64}" class="comprobante-thumb" onclick="openModal(${globalIdx})" alt="Comprobante">`
+                : `<div class="comprobante-icon">${isPdf ? '📄' : '📎'}</div>`;
+
+            comprobanteHTML = `
+                <div class="comprobante-cell">
+                    ${thumb}
+                    <div>
+                        <div class="comprobante-name">${e.comprobanteName}</div>
+                        <div style="font-size:0.72rem; color:var(--gray-text);">${e.comprobanteSizeKB ? e.comprobanteSizeKB+' KB' : ''}</div>
+                    </div>
+                </div>`;
+        }
+
+        return `<tr>
+            <td style="font-family:var(--font-head); font-size:0.72rem; color:var(--gray-text);">${e.id}</td>
+            <td><strong>${e.studentName || '—'}</strong></td>
+            <td>${e.email || '—'}</td>
+            <td>${e.course || '—'}</td>
+            <td><span class="method-badge">${(e.paymentMethod || '—').toUpperCase()}</span></td>
+            <td style="font-family:var(--font-head); font-weight:800;">$${parseFloat(e.amountUSD || 0).toFixed(2)}</td>
+            <td>${comprobanteHTML}</td>
+            <td>${statusMap[e.status] || e.status}</td>
+            <td style="color:var(--gray-text); font-size:0.82rem;">${fmtDate(e.enrolledAt)}</td>
+            <td>
+                <div class="row-actions">
+                    <button class="btn-row btn-row-view" onclick="openModal(${globalIdx})">Ver</button>
+                    ${e.status === 'pending_review'
+                        ? `<button class="btn-row btn-row-approve" onclick="approveEnrollment(${globalIdx})">Aprobar</button>`
+                        : ''}
+                    <button class="btn-row btn-row-delete" onclick="deleteEnrollment(${globalIdx})">✕</button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+
+    /* Paginación */
+    paginInfo.textContent = `Mostrando ${start + 1}–${Math.min(start + PAGE_SIZE, filteredEnrollments.length)} de ${filteredEnrollments.length}`;
+
+    paginBtns.innerHTML = '';
+    for (let p = 1; p <= totalPages; p++) {
+        const btn = document.createElement('button');
+        btn.className = 'page-btn' + (p === currentPage ? ' active' : '');
+        btn.textContent = p;
+        btn.onclick = () => { currentPage = p; renderTablePage(); };
+        paginBtns.appendChild(btn);
+    }
+}
+
+/* ── Aprobar inscripción ── */
+function approveEnrollment(idx) {
+    const enrollments = getLS(STORAGE_ENROLLMENTS);
+    const target = filteredEnrollments[idx];
+    const realIdx = enrollments.findIndex(e => e.id === target.id);
+    if (realIdx !== -1) {
+        enrollments[realIdx].status = 'active';
+        setLS(STORAGE_ENROLLMENTS, enrollments);
+        renderInscritos();
+    }
+}
+
+/* ── Eliminar inscripción ── */
+function deleteEnrollment(idx) {
+    if (!confirm('¿Eliminar esta inscripción? Esta acción no se puede deshacer.')) return;
+    const enrollments = getLS(STORAGE_ENROLLMENTS);
+    const target = filteredEnrollments[idx];
+    const realIdx = enrollments.findIndex(e => e.id === target.id);
+    if (realIdx !== -1) {
+        enrollments.splice(realIdx, 1);
+        setLS(STORAGE_ENROLLMENTS, enrollments);
+        renderInscritos();
+    }
+}
+
+/* ── Modal de detalle ── */
+function openModal(idx) {
+    const e = filteredEnrollments[idx];
+    if (!e) return;
+
+    const isImg = e.comprobanteType && e.comprobanteType.startsWith('image/');
+    const isPdf = e.comprobanteType === 'application/pdf';
+
+    let comprobantePreview = '';
+    if (e.comprobanteB64 && isImg) {
+        comprobantePreview = `<img src="${e.comprobanteB64}" class="modal-img" alt="Comprobante de ${e.studentName}">`;
+    } else if (e.comprobanteName) {
+        comprobantePreview = `<div style="padding:20px; background:var(--gray-bg); border:var(--border-thin); border-radius:var(--radius); text-align:center; margin-bottom:16px; font-size:2rem;">${isPdf ? '📄' : '📎'} <span style="font-size:0.9rem; display:block; margin-top:8px; font-weight:600;">${e.comprobanteName}</span></div>`;
+    } else {
+        comprobantePreview = `<div style="padding:20px; background:var(--gray-bg); border:var(--border-thin); border-radius:var(--radius); text-align:center; margin-bottom:16px; color:var(--gray-text);">Sin comprobante adjunto</div>`;
+    }
+
+    document.getElementById('modal-body').innerHTML = `
+        ${comprobantePreview}
+        <div class="detail-grid">
+            <div class="detail-item"><label>ID Inscripción</label><p>${e.id}</p></div>
+            <div class="detail-item"><label>Fecha</label><p>${fmtDate(e.enrolledAt)}</p></div>
+            <div class="detail-item"><label>Estudiante</label><p>${e.studentName}</p></div>
+            <div class="detail-item"><label>Email</label><p>${e.email}</p></div>
+            <div class="detail-item"><label>Teléfono</label><p>${e.phone || '—'}</p></div>
+            <div class="detail-item"><label>Curso</label><p>${e.course}</p></div>
+            <div class="detail-item"><label>Método de Pago</label><p>${(e.paymentMethod || '—').toUpperCase()}</p></div>
+            <div class="detail-item"><label>Monto</label><p>$${parseFloat(e.amountUSD || 0).toFixed(2)} USD</p></div>
+            <div class="detail-item"><label>Referencia</label><p>${e.transferRef || '—'}</p></div>
+            <div class="detail-item"><label>Comprobante</label><p>${e.comprobanteName || 'Sin archivo'}</p></div>
+            <div class="detail-item"><label>Tamaño</label><p>${e.comprobanteSizeKB ? e.comprobanteSizeKB+' KB' : '—'}</p></div>
+            <div class="detail-item"><label>Estado</label><p>${e.status}</p></div>
+        </div>
+        ${e.status === 'pending_review' ? `
+        <div style="margin-top:20px; display:flex; gap:12px;">
+            <button class="btn btn-cyan" onclick="approveEnrollment(${idx}); closeModal();" style="flex:1;">✓ Aprobar Inscripción</button>
+            <button class="btn btn-magenta" onclick="deleteEnrollment(${idx}); closeModal();" style="flex:1;">✕ Rechazar</button>
+        </div>` : ''}
+    `;
+
+    document.getElementById('modal-detalle').classList.add('visible');
+}
+
+function closeModal() {
+    document.getElementById('modal-detalle').classList.remove('visible');
+}
+
+document.getElementById('modal-detalle').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* ══════════════════════
+   USUARIOS: RENDER
+══════════════════════ */
+function renderUsuarios() {
+    const users = getLS(STORAGE_USERS);
+    const tbody = document.getElementById('tbody-usuarios');
+    const empty = document.getElementById('empty-usuarios');
+
+    document.getElementById('kpi-u-total').textContent    = users.length;
+    document.getElementById('kpi-u-students').textContent = users.filter(u => u.role === 'student').length;
+    document.getElementById('kpi-u-teachers').textContent = users.filter(u => u.role === 'teacher').length;
+    document.getElementById('kpi-u-admins').textContent   = users.filter(u => u.role === 'director' || u.role === 'owner').length;
+
+    if (users.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+    }
+
+    empty.style.display = 'none';
+
+    const roleColors = { student:'badge-active', teacher:'badge-verified', director:'badge-pending', owner:'badge-not-verified' };
+    const roleLabels = { student:'🎓 Estudiante', teacher:'📚 Profesor', director:'🏛️ Director', owner:'👑 Owner' };
+
+    tbody.innerHTML = users.map(u => `<tr>
+        <td style="font-size:0.72rem; color:var(--gray-text); font-family:var(--font-head);">${u.id}</td>
+        <td>
+            <div style="display:flex; align-items:center; gap:8px;">
+                ${u.picture ? `<img src="${u.picture}" referrerpolicy="no-referrer" style="width:24px; height:24px; border-radius:50%; border:1px solid var(--color-black); object-fit:cover;" alt="">` : ''}
+                <strong>${u.name}</strong>
+            </div>
+        </td>
+        <td>${u.email}</td>
+        <td>${u.phone || '—'}</td>
+        <td><span class="badge ${roleColors[u.role] || ''}">${roleLabels[u.role] || u.role}</span></td>
+        <td>${u.isActive ? '<span class="badge badge-active">Sí</span>' : '<span class="badge badge-not-verified">No</span>'}</td>
+        <td style="color:var(--gray-text); font-size:0.82rem;">${fmtDate(u.createdAt)}</td>
+        <td style="color:var(--gray-text); font-size:0.82rem;">${fmtDate(u.lastLoginAt)}</td>
+    </tr>`).join('');
+}
+
+/* ══════════════════════
+   BACHILLERATO: RENDER
+══════════════════════ */
+function renderBachillerato() {
+    const list  = getLS(STORAGE_BACH);
+    const tbody = document.getElementById('tbody-bachillerato');
+    const empty = document.getElementById('empty-bachillerato');
+
+    if (list.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+    }
+
+    empty.style.display = 'none';
+
+    const statusMap = {
+        pending   : '<span class="badge badge-pending">⏳ Pendiente</span>',
+        contacted : '<span class="badge badge-verified">📞 Contactado</span>',
+        enrolled  : '<span class="badge badge-active">✓ Inscrito</span>',
+        rejected  : '<span class="badge badge-not-verified">✕ Rechazado</span>',
+    };
+
+    tbody.innerHTML = list.map((r, i) => `<tr>
+        <td style="font-size:0.72rem; color:var(--gray-text);">${r.id}</td>
+        <td><strong>${r.student_name || r.studentName}</strong></td>
+        <td>${r.student_ci || r.studentCI}</td>
+        <td style="text-align:center;">${r.year_apply || r.yearApply}°</td>
+        <td>${r.rep_name || r.repName}</td>
+        <td>${r.rep_phone || r.repPhone}</td>
+        <td>${r.rep_email || r.repEmail}</td>
+        <td>${statusMap[r.status] || r.status}</td>
+        <td style="color:var(--gray-text); font-size:0.82rem;">${fmtDate(r.created_at || r.createdAt)}</td>
+        <td>
+            <div class="row-actions">
+                <button class="btn-row btn-row-approve" onclick="changeBachStatus(${i},'contacted')">Contactar</button>
+                <button class="btn-row btn-row-view"   onclick="changeBachStatus(${i},'enrolled')">Inscribir</button>
+                <button class="btn-row btn-row-delete" onclick="changeBachStatus(${i},'rejected')">Rechazar</button>
+            </div>
+        </td>
+    </tr>`).join('');
+}
+
+function changeBachStatus(idx, newStatus) {
+    const list = getLS(STORAGE_BACH);
+    if (list[idx]) {
+        list[idx].status = newStatus;
+        list[idx].updated_at = new Date().toISOString();
+        setLS(STORAGE_BACH, list);
+        renderBachillerato();
+    }
+}
+
+/* ══════════════════════
+   EXPORTAR A CSV
+══════════════════════ */
+function downloadCSV(content, filename) {
+    const blob = new Blob(['\uFEFF' + content], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function exportInscripcionesCSV() {
+    const list = getLS(STORAGE_ENROLLMENTS);
+    if (list.length === 0) { alert('No hay inscripciones para exportar.'); return; }
+
+    const headers = ['ID_Inscripcion','Nombre_Estudiante','Email','Telefono','Curso','Metodo_Pago','Monto_USD','Referencia_Pago','Comprobante_Nombre','Comprobante_Tipo','Comprobante_Tamano_KB','Estado','Fecha_Inscripcion'];
+    const rows = list.map(e => [
+        e.id, `"${e.studentName||''}"`, e.email, e.phone||'',
+        `"${e.course||''}"`, e.paymentMethod||'', e.amountUSD||0,
+        e.transferRef||'', `"${e.comprobanteName||''}"`,
+        e.comprobanteType||'', e.comprobanteSizeKB||'',
+        e.status, e.enrolledAt
+    ]);
+
+    downloadCSV(
+        [headers.join(','), ...rows.map(r => r.join(','))].join('\n'),
+        `acacentro_inscripciones_${new Date().toISOString().slice(0,10)}.csv`
+    );
+}
+
+function exportUsuariosCSV() {
+    const list = getLS(STORAGE_USERS);
+    if (list.length === 0) { alert('No hay usuarios para exportar.'); return; }
+
+    const headers = ['ID','Nombre','Email','Telefono','Rol','Activo','Fecha_Registro','Ultimo_Login'];
+    const rows = list.map(u => [
+        u.id, `"${u.name}"`, u.email, u.phone||'',
+        u.role, u.isActive?'SI':'NO', u.createdAt, u.lastLoginAt||''
+    ]);
+
+    downloadCSV(
+        [headers.join(','), ...rows.map(r => r.join(','))].join('\n'),
+        `acacentro_usuarios_${new Date().toISOString().slice(0,10)}.csv`
+    );
+}
+
+function exportBachilleratoCSV() {
+    const list = getLS(STORAGE_BACH);
+    if (list.length === 0) { alert('No hay pre-inscripciones para exportar.'); return; }
+
+    const headers = ['ID','Nombre_Estudiante','CI_Estudiante','Año_Solicitado','Nombre_Representante','Telefono','Email_Representante','Estado','Fecha'];
+    const rows = list.map(r => [
+        r.id, `"${r.student_name||r.studentName||''}"`,
+        r.student_ci||r.studentCI||'',
+        r.year_apply||r.yearApply||'',
+        `"${r.rep_name||r.repName||''}"`,
+        r.rep_phone||r.repPhone||'',
+        r.rep_email||r.repEmail||'',
+        r.status, r.created_at||r.createdAt||''
+    ]);
+
+    downloadCSV(
+        [headers.join(','), ...rows.map(r => r.join(','))].join('\n'),
+        `acacentro_bachillerato_${new Date().toISOString().slice(0,10)}.csv`
+    );
+}
+
+/* ── Ordenar tabla ── */
+function sortTable(colIdx) {
+    if (sortColIdx === colIdx) { sortAsc = !sortAsc; }
+    else { sortColIdx = colIdx; sortAsc = true; }
+
+    const fields = ['id','studentName','email','course','paymentMethod','amountUSD','','status','enrolledAt'];
+    const field = fields[colIdx];
+    if (!field) return;
+
+    filteredEnrollments.sort((a, b) => {
+        let va = a[field] || '', vb = b[field] || '';
+        if (field === 'amountUSD') { va = parseFloat(va); vb = parseFloat(vb); }
+        if (va < vb) return sortAsc ? -1 : 1;
+        if (va > vb) return sortAsc ? 1 : -1;
+        return 0;
+    });
+
+    document.querySelectorAll('thead th').forEach((th, i) => {
+        th.classList.remove('sorted-asc','sorted-desc');
+        const arrow = th.querySelector('.sort-arrow');
+        if (arrow) arrow.textContent = '↕';
+    });
+
+    const th = document.querySelectorAll('#section-inscritos thead th')[colIdx];
+    if (th) {
+        th.classList.add(sortAsc ? 'sorted-asc' : 'sorted-desc');
+        const arrow = th.querySelector('.sort-arrow');
+        if (arrow) arrow.textContent = sortAsc ? '↑' : '↓';
+    }
+
+    currentPage = 1;
+    renderTablePage();
+}
+
+/* ══════════════════════
+   GESTIÓN DE COMPROBANTES DE PAGO
+   ══════════════════════ */
+window.renderComprobantes = function() {
+    const enrollments = getLS(STORAGE_ENROLLMENTS);
+    
+    // Contadores de comprobantes
+    const pendingCount = enrollments.filter(e => e.status === 'pending_review' && e.comprobanteName).length;
+    const approvedCount = enrollments.filter(e => e.status === 'active' && e.comprobanteName).length;
+    const rejectedCount = enrollments.filter(e => e.status === 'rejected' && e.comprobanteName).length;
+    
+    document.getElementById('kpi-comp-pending').textContent = pendingCount;
+    document.getElementById('kpi-comp-approved').textContent = approvedCount;
+    document.getElementById('kpi-comp-rejected').textContent = rejectedCount;
+    
+    // Obtener filtros
+    const filterMetodo = document.getElementById('filter-comp-metodo').value;
+    const filterEstado = document.getElementById('filter-comp-estado').value;
+    
+    // Filtrar comprobantes (solo aquellos que tienen comprobanteName)
+    const comps = enrollments.filter(e => {
+        if (!e.comprobanteName) return false;
+        
+        const matchMetodo = !filterMetodo || e.paymentMethod === filterMetodo;
+        const matchEstado = !filterEstado || e.status === filterEstado;
+        return matchMetodo && matchEstado;
+    });
+    
+    const container = document.getElementById('comprobantes-grid-container');
+    const emptyState = document.getElementById('empty-comprobantes');
+    
+    if (comps.length === 0) {
+        container.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
+    }
+    
+    emptyState.style.display = 'none';
+    
+    const methodNames = {
+        zelle: 'Zelle 🟩',
+        paypal: 'PayPal 🟦',
+        transfer: 'Transferencia 🏦',
+        pago_movil: 'Pago Móvil 📱',
+        card: 'Tarjeta 💳'
+    };
+    
+    const statusBadges = {
+        pending_review: '<span class="badge badge-pending">⏳ PENDIENTE</span>',
+        active: '<span class="badge badge-active">✓ APROBADO</span>',
+        rejected: '<span class="badge" style="color:var(--magenta); border-color:var(--magenta); background-color:rgba(255,44,109,0.08);">✕ RECHAZADO</span>'
+    };
+    
+    container.innerHTML = comps.map(e => {
+        const isImg = e.comprobanteType && e.comprobanteType.startsWith('image/');
+        const isPdf = e.comprobanteType === 'application/pdf';
+        
+        let previewHTML = '';
+        if (e.comprobanteB64 && isImg) {
+            previewHTML = `<img src="${e.comprobanteB64}" alt="Comprobante de ${e.studentName}" onclick="zoomPayment('${e.comprobanteB64}')">`;
+        } else {
+            previewHTML = `
+                <div class="comprobante-card-preview-placeholder">
+                    <span>${isPdf ? '📄 PDF' : '📎 ARCHIVO'}</span>
+                    <span style="font-size:0.8rem; font-weight:normal; text-transform:none; max-width:200px; text-align:center; overflow:hidden; text-overflow:ellipsis;">${e.comprobanteName}</span>
+                </div>
+            `;
+        }
+        
+        // Determinar acciones según estado
+        let actionsHTML = '';
+        if (e.status === 'pending_review') {
+            actionsHTML = `
+                <button class="btn-comp-action btn-comp-approve" onclick="approvePaymentById('${e.id}')">✓ Aprobar</button>
+                <button class="btn-comp-action btn-comp-reject" onclick="rejectPaymentById('${e.id}')">✕ Rechazar</button>
+            `;
+        } else if (e.status === 'active') {
+            actionsHTML = `
+                <div style="grid-column: span 2; padding: 12px; text-align: center; font-family: var(--font-head); font-weight: 800; font-size: 0.8rem; color: var(--cyan);">✓ ESTE PAGO YA FUE APROBADO</div>
+            `;
+        } else {
+            actionsHTML = `
+                <div style="grid-column: span 2; padding: 12px; text-align: center; font-family: var(--font-head); font-weight: 800; font-size: 0.8rem; color: var(--magenta);">✕ ESTE PAGO FUE RECHAZADO</div>
+            `;
+        }
+        
+        // Agregar botón de ver detalle extendido/abrir comprobante
+        if (e.comprobanteB64 && isImg) {
+            actionsHTML += `<button class="btn-comp-action btn-comp-view-full" onclick="zoomPayment('${e.comprobanteB64}')">🔍 Ampliar Imagen</button>`;
+        }
+        
+        return `
+            <div class="comprobante-card">
+                <div class="comprobante-card-header">
+                    <span class="comprobante-card-course">${e.course}</span>
+                    ${statusBadges[e.status] || e.status}
+                </div>
+                <div class="comprobante-card-preview">
+                    ${previewHTML}
+                </div>
+                <div class="comprobante-card-body">
+                    <div class="comprobante-student-info">
+                        <div class="comprobante-student-name">${e.studentName}</div>
+                        <div class="comprobante-student-meta">
+                            <span>📧 ${e.email}</span>
+                            <span>📞 ${e.phone || 'Sin teléfono'}</span>
+                        </div>
+                    </div>
+                    <div class="comprobante-payment-info">
+                        <div class="comprobante-info-item">
+                            <span class="comprobante-info-label">Método</span>
+                            <span class="comprobante-info-value">${methodNames[e.paymentMethod] || e.paymentMethod.toUpperCase()}</span>
+                        </div>
+                        <div class="comprobante-info-item">
+                            <span class="comprobante-info-label">Monto</span>
+                            <span class="comprobante-info-value">$${parseFloat(e.amountUSD || 0).toFixed(2)}</span>
+                        </div>
+                        <div class="comprobante-info-item" style="grid-column: span 2;">
+                            <span class="comprobante-info-label">Referencia</span>
+                            <span class="comprobante-info-value" style="font-family: monospace; font-size:0.85rem;">${e.transferRef || 'Sin referencia'}</span>
+                        </div>
+                        <div class="comprobante-info-item" style="grid-column: span 2;">
+                            <span class="comprobante-info-label">Fecha del Pedido</span>
+                            <span class="comprobante-info-value" style="font-weight: normal; font-size:0.75rem; color: var(--gray-text);">${fmtDate(e.enrolledAt)}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="comprobante-card-actions">
+                    ${actionsHTML}
+                </div>
+            </div>
+        `;
+    }).join('');
+};
+
+window.approvePaymentById = function(id) {
+    const enrollments = getLS(STORAGE_ENROLLMENTS);
+    const idx = enrollments.findIndex(e => e.id === id);
+    if (idx !== -1) {
+        enrollments[idx].status = 'active';
+        setLS(STORAGE_ENROLLMENTS, enrollments);
+        renderComprobantes();
+        renderInscritos();
+        alert('✓ Pago verificado e inscripción aprobada con éxito.');
+    }
+};
+
+window.rejectPaymentById = function(id) {
+    if (!confirm('¿Seguro que deseas rechazar este comprobante de pago?')) return;
+    const enrollments = getLS(STORAGE_ENROLLMENTS);
+    const idx = enrollments.findIndex(e => e.id === id);
+    if (idx !== -1) {
+        enrollments[idx].status = 'rejected';
+        setLS(STORAGE_ENROLLMENTS, enrollments);
+        renderComprobantes();
+        renderInscritos();
+        alert('✕ El comprobante de pago fue rechazado.');
+    }
+};
+
+window.zoomPayment = function(b64) {
+    const modal = document.querySelector('#img-modal') || createZoomModal();
+    modal.classList.add('open');
+    document.getElementById('modal-img-el').src = b64;
+};
+
+function createZoomModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.id = 'img-modal';
+    modal.style.zIndex = '999';
+    modal.onclick = function(e) { if (e.target === modal) modal.classList.remove('open'); };
+    
+    modal.innerHTML = `
+        <div style="position:relative; max-width:90%; max-height:90%; background:var(--white); border:var(--border); padding:8px; border-radius:var(--radius); box-shadow:var(--shadow);">
+            <button onclick="document.getElementById('img-modal').classList.remove('open')" style="position:absolute; top:-15px; right:-15px; width:30px; height:30px; background:var(--magenta); color:var(--white); border:var(--border-thin); font-family:var(--font-head); font-weight:900; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:50%;">✕</button>
+            <img src="" id="modal-img-el" alt="Comprobante ampliado" style="max-width:100%; max-height:80vh; display:block; object-fit:contain;">
+        </div>
+    `;
+    document.body.appendChild(modal);
+    return modal;
+}
+
+/* ══════════════════════
+   AGREGAR PROFESOR DESDE PANEL
+   ══════════════════════ */
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+    }
+    return 'HASH_' + Math.abs(hash).toString(16).toUpperCase();
+}
+
+document.getElementById('form-add-teacher').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('add-t-name').value.trim();
+    const email = document.getElementById('add-t-email').value.trim();
+    const phone = document.getElementById('add-t-phone').value.trim();
+    const password = document.getElementById('add-t-password').value;
+
+    if (!name || !email || !password) {
+        alert('Por favor completa todos los campos requeridos (Nombre, Correo, Contraseña).');
+        return;
+    }
+
+    if (password.length < 8) {
+        alert('La contraseña debe tener al menos 8 caracteres.');
+        return;
+    }
+
+    const users = getLS(STORAGE_USERS);
+    const exists = users.some(u => u.email.toLowerCase() === email.toLowerCase());
+    if (exists) {
+        alert('⚠️ Este correo electrónico ya está registrado en el sistema.');
+        return;
+    }
+
+    const newTeacher = {
+        id          : 'USR-TEACH-' + Date.now(),
+        name        : name,
+        email       : email,
+        phone       : phone,
+        role        : 'teacher',
+        passwordHash: simpleHash(password),
+        isActive    : true,
+        createdAt   : new Date().toISOString(),
+        lastLoginAt : null
+    };
+
+    users.push(newTeacher);
+    setLS(STORAGE_USERS, users);
+
+    alert(`✅ Profesor ${name} registrado con éxito en el sistema.`);
+    document.getElementById('form-add-teacher').reset();
+    renderUsuarios();
+});
+
+/* ── Inicializar ── */
+renderInscritos();
+</script>
+</body>
+</html>

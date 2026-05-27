@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revisar Inscripción | ACACENTRO Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background-color: #F4F4F0; }
+
+        .admin-page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        .admin-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #0A0A0A;
+        }
+
+        .admin-title {
+            font-size: 2.2rem;
+            letter-spacing: -1.5px;
+        }
+
+        .data-table-wrap {
+            background: #fff;
+            border: 3px solid #0A0A0A;
+            box-shadow: 5px 5px 0 #0A0A0A;
+            overflow-x: auto;
+            border-radius: 4px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .data-table thead th {
+            background-color: #0A0A0A;
+            color: #FFE600;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            padding: 12px 16px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .data-table tbody tr {
+            border-bottom: 1px solid #E8E8E4;
+        }
+
+        .data-table tbody tr:last-child { border-bottom: none; }
+        .data-table tbody tr:hover { background-color: #F4F4F0; }
+
+        .data-table tbody td {
+            padding: 12px 16px;
+            vertical-align: middle;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        .pill-pending { background: rgba(217,119,6,0.12); color: #D97706; border: 1px solid #D97706; }
+        .pill-active  { background: rgba(17,202,160,0.12); color: #11CAA0; border: 1px solid #11CAA0; }
+
+        .comprobante-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .comprobante-img-thumb {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border: 2px solid #0A0A0A;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .no-thumb {
+            width: 48px;
+            height: 48px;
+            background: #F4F4F0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .diag-box {
+            background-color: #0A0A0A;
+            color: #11CAA0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            padding: 20px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 24px;
+        }
+
+        .section-label {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6B7280;
+            margin-bottom: 8px;
+            margin-top: 28px;
+        }
+
+        .empty-box {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6B7280;
+        }
+
+        .empty-box h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #0A0A0A;
+        }
+
+        .kpis-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .kpi {
+            background: #fff;
+            border: 3px solid #0A0A0A;
+            box-shadow: 4px 4px 0 #0A0A0A;
+            padding: 16px 20px;
+            border-radius: 4px;
+        }
+
+        .kpi-n { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 2rem; letter-spacing: -1px; }
+        .kpi-l { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.72rem; text-transform: uppercase; color: #6B7280; margin-bottom: 4px; }
+
+        /* Modal comprobante */
+        .img-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .img-modal.open { display: flex; }
+
+        .img-modal img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border: 3px solid #FFE600;
+            border-radius: 4px;
+        }
+
+        .img-modal-close {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #FFE600;
+            border: 3px solid #0A0A0A;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Botón aprobar en la fila */
+        .btn-aprobar {
+            padding: 5px 12px;
+            background: rgba(17,202,160,0.12);
+            color: #11CAA0;
+            border: 1px solid #11CAA0;
+            border-radius: 4px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .btn-aprobar:hover { background: rgba(17,202,160,0.25); }
+
+        .btn-rechazar {
+            padding: 5px 12px;
+            background: rgba(255,44,109,0.1);
+            color: #FF2C6D;
+            border: 1px solid #FF2C6D;
+            border-radius: 4px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-left: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header brutalista del sitio -->
+    <header class="academy-header">
+        <div class="academy-header-container">
+            <a href="index.html" class="academy-logo">
+                <span class="logo-box">ACACENTRO</span>
+            </a>
+            <span style="background:#FFE600; color:#0A0A0A; border:2px solid #0A0A0A; font-family:'Outfit',sans-serif; font-weight:900; font-size:0.8rem; text-transform:uppercase; padding:6px 14px;">
+                🔐 Panel Admin
+            </span>
+        </div>
+    </header>
+
+    <div class="admin-page">
+
+        <div class="admin-topbar">
+            <div>
+                <h1 class="admin-title" style="font-family:'Outfit',sans-serif; font-weight:900;">Inscripciones Recibidas</h1>
+                <p style="color:#6B7280; font-size:0.88rem; margin-top:4px;">Datos guardados desde el checkout. Se actualizan en tiempo real.</p>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn-brutalist btn-brutalist-yellow" style="padding:10px 18px; font-size:0.8rem;" onclick="exportCSV()">
+                    ⬇ Descargar CSV
+                </button>
+                <a href="index.html" class="btn-brutalist btn-brutalist-white" style="padding:10px 18px; font-size:0.8rem;">← Sitio</a>
+            </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpis-row" id="kpis-row"></div>
+
+        <!-- Tabla de inscritos -->
+        <div class="section-label">Todas las inscripciones</div>
+
+        <div class="data-table-wrap">
+            <table class="data-table" id="main-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Curso</th>
+                        <th>Método</th>
+                        <th>Monto</th>
+                        <th>Referencia</th>
+                        <th>Comprobante</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                </tbody>
+            </table>
+            <div id="empty-state" class="empty-box" style="display:none;">
+                <span style="font-size:3rem; display:block; margin-bottom:12px;">📋</span>
+                <h2>Sin inscripciones todavía</h2>
+                <p>Las inscripciones del <a href="checkout.html">checkout</a> aparecerán aquí automáticamente.</p>
+                <p style="margin-top:8px; font-size:0.82rem; color:#999;">Asegúrate de abrir esta página y el checkout desde el mismo origen (servidor o file://).</p>
+            </div>
+        </div>
+
+        <!-- Diagnóstico de localStorage -->
+        <div class="section-label">Diagnóstico del almacenamiento (localStorage)</div>
+        <div class="diag-box" id="diag-box">Cargando...</div>
+
+    </div>
+
+    <!-- Modal imagen comprobante -->
+    <div class="img-modal" id="img-modal" onclick="closeImgModal()">
+        <button class="img-modal-close" onclick="closeImgModal()">✕ Cerrar</button>
+        <img src="" id="modal-img-el" alt="Comprobante de pago ampliado">
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+    (function () {
+        'use strict';
+
+        /* ── Validación de seguridad (Admin exclusivo) ── */
+        const session = (function() {
+            try { return JSON.parse(localStorage.getItem('acacentro_session') || 'null'); }
+            catch { return null; }
+        })();
+
+        if (!session || session.role !== 'owner') {
+            alert('⚠️ Acceso denegado. Este panel está restringido al Administrador (owner).');
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const KEY = 'acacentro_enrollments_db';
+
+        /* ── Leer de localStorage ── */
+        function getEnrollments() {
+            try {
+                return JSON.parse(localStorage.getItem(KEY) || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveEnrollments(list) {
+            localStorage.setItem(KEY, JSON.stringify(list));
+        }
+
+        /* ── Formatear fecha ── */
+        function fmtDate(iso) {
+            if (!iso) return '—';
+            const d = new Date(iso);
+            return d.toLocaleDateString('es-VE', { day:'2-digit', month:'2-digit', year:'numeric' })
+                + ' ' + d.toLocaleTimeString('es-VE', { hour:'2-digit', minute:'2-digit' });
+        }
+
+        function fmtBytes(kb) {
+            if (!kb) return '—';
+            const n = parseFloat(kb);
+            if (n >= 1024) return (n/1024).toFixed(1) + ' MB';
+            return n.toFixed(1) + ' KB';
+        }
+
+        /* ── Modal de imagen ── */
+        function openImgModal(src) {
+            document.getElementById('modal-img-el').src = src;
+            document.getElementById('img-modal').classList.add('open');
+        }
+
+        window.closeImgModal = function () {
+            document.getElementById('img-modal').classList.remove('open');
+        };
+
+        /* ── Aprobar inscripción ── */
+        window.aprobarInscripcion = function (id) {
+            const list = getEnrollments();
+            const idx = list.findIndex(e => e.id === id);
+            if (idx !== -1) {
+                list[idx].status = 'active';
+                saveEnrollments(list);
+                renderAll();
+            }
+        };
+
+        /* ── Eliminar inscripción ── */
+        window.eliminarInscripcion = function (id) {
+            if (!confirm('¿Eliminar esta inscripción permanentemente?')) return;
+            const list = getEnrollments();
+            const filtered = list.filter(e => e.id !== id);
+            saveEnrollments(filtered);
+            renderAll();
+        };
+
+        /* ── Render principal ── */
+        function renderAll() {
+            const list = getEnrollments();
+
+            /* ── KPIs ── */
+            const total   = list.length;
+            const active  = list.filter(e => e.status === 'active').length;
+            const pending = list.filter(e => e.status === 'pending_review').length;
+            const revenue = list
+                .filter(e => e.status === 'active')
+                .reduce((s, e) => s + (parseFloat(e.amountUSD) || 0), 0);
+
+            document.getElementById('kpis-row').innerHTML = `
+                <div class="kpi">
+                    <div class="kpi-l">Total Inscritos</div>
+                    <div class="kpi-n">${total}</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-l">Activos</div>
+                    <div class="kpi-n" style="color:#11CAA0;">${active}</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-l">Pendientes</div>
+                    <div class="kpi-n" style="color:#D97706;">${pending}</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-l">Ingresos USD</div>
+                    <div class="kpi-n" style="color:#005088;">$${revenue.toFixed(2)}</div>
+                </div>
+            `;
+
+            /* ── Tabla ── */
+            const tbody  = document.getElementById('table-body');
+            const emptyEl = document.getElementById('empty-state');
+
+            if (list.length === 0) {
+                tbody.innerHTML = '';
+                emptyEl.style.display = 'block';
+            } else {
+                emptyEl.style.display = 'none';
+
+                tbody.innerHTML = list.map((e, i) => {
+                    const isImg = e.comprobanteType && e.comprobanteType.startsWith('image/');
+                    const isPdf = e.comprobanteType === 'application/pdf';
+
+                    let comprobanteHTML = '<span style="color:#ccc; font-size:0.78rem;">Sin archivo</span>';
+
+                    if (e.comprobanteB64 && isImg) {
+                        comprobanteHTML = `
+                            <div class="comprobante-box">
+                                <img src="${e.comprobanteB64}"
+                                     class="comprobante-img-thumb"
+                                     onclick="document.querySelector('#img-modal').classList.add('open'); document.getElementById('modal-img-el').src='${e.comprobanteB64}';"
+                                     title="Clic para ampliar"
+                                     alt="Comprobante de ${e.studentName}">
+                                <div>
+                                    <div style="font-size:0.78rem; font-weight:600; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${e.comprobanteName}</div>
+                                    <div style="font-size:0.72rem; color:#999;">${fmtBytes(e.comprobanteSizeKB)}</div>
+                                </div>
+                            </div>`;
+                    } else if (e.comprobanteName) {
+                        comprobanteHTML = `
+                            <div class="comprobante-box">
+                                <div class="no-thumb">${isPdf ? '📄' : '📎'}</div>
+                                <div>
+                                    <div style="font-size:0.78rem; font-weight:600; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${e.comprobanteName}</div>
+                                    <div style="font-size:0.72rem; color:#999;">${fmtBytes(e.comprobanteSizeKB)}</div>
+                                </div>
+                            </div>`;
+                    }
+
+                    const statusPill = e.status === 'active'
+                        ? `<span class="status-pill pill-active">✓ Activo</span>`
+                        : e.status === 'pending_review'
+                        ? `<span class="status-pill pill-pending">⏳ Pendiente</span>`
+                        : `<span class="status-pill" style="background:#f3f4f6; color:#6b7280; border:1px solid #9ca3af;">${e.status}</span>`;
+
+                    const actions = e.status === 'pending_review'
+                        ? `<button class="btn-aprobar" onclick="aprobarInscripcion('${e.id}')">✓ Aprobar</button>
+                           <button class="btn-rechazar" onclick="eliminarInscripcion('${e.id}')">✕</button>`
+                        : `<button class="btn-rechazar" onclick="eliminarInscripcion('${e.id}')">Eliminar</button>`;
+
+                    return `<tr>
+                        <td style="color:#9ca3af; font-weight:700;">${i + 1}</td>
+                        <td style="font-family:'Courier New',monospace; font-size:0.72rem; color:#9ca3af; max-width:130px; overflow:hidden; text-overflow:ellipsis;">${e.id}</td>
+                        <td><strong>${e.studentName || '—'}</strong></td>
+                        <td style="color:#374151;">${e.email || '—'}</td>
+                        <td style="color:#374151;">${e.phone || '—'}</td>
+                        <td style="font-weight:600;">${e.course || '—'}</td>
+                        <td>
+                            <span style="background:#F4F4F0; border:1px solid #0A0A0A; padding:3px 8px; font-family:'Outfit',sans-serif; font-weight:800; font-size:0.72rem; text-transform:uppercase; border-radius:2px;">
+                                ${(e.paymentMethod || '—').toUpperCase()}
+                            </span>
+                        </td>
+                        <td style="font-family:'Outfit',sans-serif; font-weight:900;">$${parseFloat(e.amountUSD || 0).toFixed(2)}</td>
+                        <td style="font-size:0.78rem; color:#6b7280;">${e.transferRef || '—'}</td>
+                        <td>${comprobanteHTML}</td>
+                        <td>${statusPill}</td>
+                        <td style="font-size:0.78rem; color:#9ca3af; white-space:nowrap;">${fmtDate(e.enrolledAt)}</td>
+                        <td style="white-space:nowrap;">${actions}</td>
+                    </tr>`;
+                }).join('');
+            }
+
+            /* ── Diagnóstico de localStorage ── */
+            const diagEl = document.getElementById('diag-box');
+            const allKeys = Object.keys(localStorage);
+
+            let diagText = `=== localStorage en: ${window.location.origin} ===\n\n`;
+            diagText += `Clave buscada: "${KEY}"\n`;
+            diagText += `Encontrada: ${localStorage.getItem(KEY) !== null ? 'SÍ ✓' : 'NO ✗ (datos en otro origen)'}\n\n`;
+            diagText += `Todas las claves guardadas (${allKeys.length}):\n`;
+
+            allKeys.forEach(k => {
+                const val = localStorage.getItem(k);
+                const preview = val && val.length > 120 ? val.slice(0, 120) + '...' : val;
+                diagText += `  "${k}" → ${preview}\n`;
+            });
+
+            if (allKeys.length === 0) {
+                diagText += '  (ninguna)\n';
+            }
+
+            diagEl.textContent = diagText;
+        }
+
+        /* ── Exportar CSV ── */
+        window.exportCSV = function () {
+            const list = getEnrollments();
+
+            if (list.length === 0) {
+                alert('No hay inscripciones para exportar todavía.');
+                return;
+            }
+
+            const headers = [
+                'Numero', 'ID_Inscripcion', 'Nombre_Estudiante', 'Email', 'Telefono',
+                'Curso', 'Metodo_Pago', 'Monto_USD', 'Referencia_Pago',
+                'Comprobante_Nombre', 'Comprobante_Tipo', 'Comprobante_Tamano_KB',
+                'Estado', 'Fecha_Inscripcion'
+            ];
+
+            const rows = list.map((e, i) => [
+                i + 1,
+                e.id,
+                `"${(e.studentName || '').replace(/"/g, '""')}"`,
+                e.email || '',
+                e.phone || '',
+                `"${(e.course || '').replace(/"/g, '""')}"`,
+                e.paymentMethod || '',
+                parseFloat(e.amountUSD || 0).toFixed(2),
+                e.transferRef || '',
+                `"${(e.comprobanteName || 'Sin comprobante').replace(/"/g, '""')}"`,
+                e.comprobanteType || '',
+                e.comprobanteSizeKB || '',
+                e.status || '',
+                e.enrolledAt || ''
+            ]);
+
+            const csv = [
+                headers.join(','),
+                ...rows.map(r => r.join(','))
+            ].join('\n');
+
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url  = URL.createObjectURL(blob);
+            const a    = document.createElement('a');
+            a.href     = url;
+            a.download = 'acacentro_inscripciones_' + new Date().toISOString().slice(0, 10) + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+
+        /* ── Inicializar y refrescar cada 3 segundos ── */
+        renderAll();
+        setInterval(renderAll, 3000);   // Auto-refresh para ver cambios en tiempo real
+
+    })();
+    </script>
+</body>
+</html>

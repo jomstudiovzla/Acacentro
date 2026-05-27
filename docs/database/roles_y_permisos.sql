@@ -1,0 +1,289 @@
+-- ============================================================
+--  ACACENTRO Creative Academy — Sistema de Roles y Permisos
+--  Archivo: docs/database/roles_y_permisos.sql
+--  Versión: 1.0.0
+-- ============================================================
+--
+--  ROLES DISPONIBLES EN EL SISTEMA
+--  ================================
+--  1. student   → Estudiante inscrito en cursos
+--  2. teacher   → Docente / Profesor
+--  3. director  → Director académico
+--  4. owner     → Dueño / Superadministrador
+--
+--  Los roles son acumulativos hacia arriba:
+--  owner > director > teacher > student
+--
+-- ============================================================
+
+-- ============================================================
+-- ROL: student (Estudiante)
+-- ============================================================
+-- DESCRIPCIÓN:
+--   Usuario que se inscribió en uno o más cursos. Accede al
+--   aula virtual, puede marcar lecciones como completadas,
+--   descargar recursos y recibir certificados.
+--
+-- PUEDE:
+--   ✅  Ver el catálogo de cursos publicados
+--   ✅  Ver lecciones preview (is_preview = TRUE) sin pagar
+--   ✅  Ver lecciones completas de los cursos en los que está inscrito
+--   ✅  Marcar lecciones como completadas (lesson_progress)
+--   ✅  Descargar recursos de las lecciones de sus cursos
+--   ✅  Ver y editar su propio perfil
+--   ✅  Ver sus certificados emitidos
+--   ✅  Ver la página de Bachillerato e información pública
+--   ✅  Enviar el formulario de pre-inscripción de bachillerato
+--   ✅  Ver su propio progreso de curso
+--
+-- NO PUEDE:
+--   ❌  Ver lecciones de cursos en los que NO está inscrito
+--   ❌  Ver datos de otros usuarios
+--   ❌  Crear, editar o eliminar cursos, módulos ni lecciones
+--   ❌  Ver reportes financieros ni inscripciones de otros
+--   ❌  Publicar ni desactivar cursos
+--   ❌  Gestionar pre-inscripciones de bachillerato
+--   ❌  Emitir certificados (solo el sistema los emite)
+--   ❌  Acceder a cualquier panel /dashboard/teacher, /director, /owner
+--
+-- RUTAS PERMITIDAS (frontend):
+--   GET  /                          → Landing pública
+--   GET  /catalogo                  → Catálogo de cursos
+--   GET  /bachillerato              → Página de bachillerato
+--   GET  /classroom                 → Aula virtual (solo cursos inscritos)
+--   GET  /dashboard/student         → Panel del estudiante
+--   GET  /perfil                    → Perfil propio
+--   GET  /mis-cursos                → Lista de cursos del estudiante
+--   GET  /mis-certificados          → Certificados propios
+--
+-- ENDPOINTS API PERMITIDOS:
+--   GET  /api/v1/courses            → Cursos publicados
+--   GET  /api/v1/courses/:slug      → Detalle de un curso
+--   GET  /api/v1/lessons/:id        → Lección (si está inscrito)
+--   POST /api/v1/progress           → Guardar progreso
+--   GET  /api/v1/me                 → Perfil propio
+--   PUT  /api/v1/me                 → Editar perfil propio
+--   GET  /api/v1/certificates/me    → Mis certificados
+
+-- ============================================================
+-- ROL: teacher (Profesor / Docente)
+-- ============================================================
+-- DESCRIPCIÓN:
+--   Docente que puede crear y gestionar contenido de los cursos
+--   asignados. También puede ser asignado como docente de materias
+--   de bachillerato. Puede ver a sus propios estudiantes.
+--
+-- PUEDE (todo lo que puede student, más):
+--   ✅  Ver lista de estudiantes inscritos en SUS cursos
+--   ✅  Crear módulos y lecciones dentro de SUS cursos
+--   ✅  Editar módulos y lecciones de SUS cursos
+--   ✅  Subir recursos (PDFs, ZIPs, materiales) a SUS lecciones
+--   ✅  Ver progreso de estudiantes en SUS cursos
+--   ✅  Ver su asignación de materias de bachillerato
+--   ✅  Acceder a /dashboard/teacher
+--
+-- NO PUEDE:
+--   ❌  Publicar ni despublicar cursos (requiere director/owner)
+--   ❌  Crear cursos desde cero sin asignación (depende de política)
+--   ❌  Ver reportes financieros
+--   ❌  Ver pre-inscripciones de bachillerato
+--   ❌  Gestionar usuarios del sistema
+--   ❌  Acceder a /dashboard/director o /dashboard/owner
+--   ❌  Emitir o revocar certificados
+--   ❌  Modificar cursos que no le pertenecen
+--
+-- RUTAS PERMITIDAS (frontend):
+--   GET  /dashboard/teacher            → Panel del docente
+--   GET  /dashboard/teacher/mis-cursos → Sus cursos asignados
+--   GET  /dashboard/teacher/estudiantes/:courseId → Sus estudiantes
+--   GET  /dashboard/teacher/bachillerato → Sus materias asignadas
+--
+-- ENDPOINTS API PERMITIDOS (adicionales):
+--   POST /api/v1/courses              → Crear curso (si política lo permite)
+--   PUT  /api/v1/courses/:id          → Editar SU curso
+--   POST /api/v1/modules              → Crear módulo en SU curso
+--   PUT  /api/v1/modules/:id          → Editar módulo de SU curso
+--   POST /api/v1/lessons              → Crear lección en SU módulo
+--   PUT  /api/v1/lessons/:id          → Editar SU lección
+--   GET  /api/v1/enrollments?course=X → Inscritos en SU curso
+--   GET  /api/v1/progress?course=X    → Progreso de SU curso
+
+-- ============================================================
+-- ROL: director (Director Académico)
+-- ============================================================
+-- DESCRIPCIÓN:
+--   Director del plantel. Tiene control total sobre el contenido
+--   académico, bachillerato, inscripciones y reportes operativos.
+--   No accede a configuración técnica ni finanzas completas.
+--
+-- PUEDE (todo lo que puede teacher, más):
+--   ✅  Publicar y despublicar CUALQUIER curso
+--   ✅  Ver y gestionar TODOS los cursos del sistema
+--   ✅  Ver lista de TODOS los usuarios (lectura)
+--   ✅  Asignar docentes a cursos y materias de bachillerato
+--   ✅  Gestionar programas de bachillerato (años, materias, turnos)
+--   ✅  Ver y gestionar pre-inscripciones de bachillerato
+--   ✅  Cambiar estado de pre-inscripción (pending → contacted → enrolled)
+--   ✅  Ver reportes de progreso de todos los estudiantes
+--   ✅  Ver reportes de inscripciones (no financieros detallados)
+--   ✅  Emitir certificados manualmente a un estudiante
+--   ✅  Desactivar estudiantes (is_active = FALSE)
+--   ✅  Acceder a /dashboard/director
+--
+-- NO PUEDE:
+--   ❌  Ver reportes financieros detallados (montos, referencias de pago)
+--   ❌  Crear ni eliminar usuarios de roles teacher/director/owner
+--   ❌  Cambiar el rol de un usuario
+--   ❌  Acceder a configuración global del sistema
+--   ❌  Eliminar cursos permanentemente
+--   ❌  Acceder a /dashboard/owner
+--   ❌  Revocar tokens de sesión de otros usuarios
+--
+-- RUTAS PERMITIDAS (frontend):
+--   GET  /dashboard/director                     → Panel directivo
+--   GET  /dashboard/director/cursos              → Todos los cursos
+--   GET  /dashboard/director/bachillerato        → Gestión de bachillerato
+--   GET  /dashboard/director/preinscripciones    → Formularios recibidos
+--   GET  /dashboard/director/reportes            → Reportes académicos
+--   GET  /dashboard/director/usuarios            → Lista de usuarios (lectura)
+--
+-- ENDPOINTS API PERMITIDOS (adicionales):
+--   PUT  /api/v1/courses/:id/publish             → Publicar/despublicar curso
+--   GET  /api/v1/courses (todos)                 → Ver todos los cursos
+--   GET  /api/v1/users                           → Listar usuarios
+--   POST /api/v1/bachillerato/programs           → Crear programa de año
+--   PUT  /api/v1/bachillerato/programs/:id       → Editar programa
+--   GET  /api/v1/bachillerato/preinscripciones   → Ver pre-inscripciones
+--   PUT  /api/v1/bachillerato/preinscripciones/:id → Actualizar estado
+--   POST /api/v1/certificates                    → Emitir certificado
+--   GET  /api/v1/reports/progress                → Reporte de progreso
+
+-- ============================================================
+-- ROL: owner (Dueño / Superadministrador)
+-- ============================================================
+-- DESCRIPCIÓN:
+--   Control total y absoluto sobre el sistema. Solo debe existir
+--   uno o dos usuarios con este rol. Tiene acceso a configuración
+--   técnica, finanzas, logs y gestión de todos los roles.
+--
+-- PUEDE (todo lo que puede director, más):
+--   ✅  Ver reportes financieros completos (pagos, referencias, totales)
+--   ✅  Crear usuarios con cualquier rol (student/teacher/director/owner)
+--   ✅  Cambiar el rol de cualquier usuario
+--   ✅  Eliminar usuarios permanentemente
+--   ✅  Eliminar cursos permanentemente
+--   ✅  Ver el audit_log completo del sistema
+--   ✅  Revocar refresh_tokens (forzar logout de cualquier usuario)
+--   ✅  Configuración global del sistema
+--   ✅  Ver y gestionar TODAS las pre-inscripciones de bachillerato
+--   ✅  Acceder a /dashboard/owner
+--   ✅  Exportar datos (usuarios, inscripciones, reportes)
+--
+-- RUTAS PERMITIDAS (frontend):
+--   GET  /dashboard/owner                        → Panel de propietario
+--   GET  /dashboard/owner/finanzas               → Reportes financieros
+--   GET  /dashboard/owner/usuarios               → Gestión completa de usuarios
+--   GET  /dashboard/owner/configuracion          → Config global del sistema
+--   GET  /dashboard/owner/audit                  → Registro de auditoría
+--   GET  /dashboard/owner/exportar               → Exportar datos
+--
+-- ENDPOINTS API PERMITIDOS (adicionales a director):
+--   GET  /api/v1/reports/financial               → Reporte financiero
+--   POST /api/v1/users                           → Crear usuario con cualquier rol
+--   PUT  /api/v1/users/:id/role                  → Cambiar rol
+--   DELETE /api/v1/users/:id                     → Eliminar usuario
+--   DELETE /api/v1/courses/:id                   → Eliminar curso
+--   GET  /api/v1/audit-log                       → Ver log de auditoría
+--   POST /api/v1/auth/revoke/:userId             → Revocar sesiones de un usuario
+--   GET  /api/v1/reports/export                  → Exportar CSV/Excel
+
+-- ============================================================
+-- TABLA DE PERMISOS RESUMIDA (para referencia rápida)
+-- ============================================================
+--
+--  RECURSO / ACCIÓN                        student  teacher  director  owner
+--  ─────────────────────────────────────────────────────────────────────────
+--  Ver cursos publicados                      ✅      ✅       ✅       ✅
+--  Ver aula (sus cursos)                      ✅      ✅       ✅       ✅
+--  Ver lección preview                        ✅      ✅       ✅       ✅
+--  Marcar lección completada                  ✅       -        -        -
+--  Inscribirse en curso                       ✅       -        -        -
+--  Ver su propio perfil                       ✅      ✅       ✅       ✅
+--  Editar su propio perfil                    ✅      ✅       ✅       ✅
+--  Ver sus certificados                       ✅      ✅       ✅       ✅
+--  Acceso /dashboard/student                  ✅       -        -        -
+--  Acceso /dashboard/teacher                   -      ✅        -        -
+--  Acceso /dashboard/director                  -       -       ✅        -
+--  Acceso /dashboard/owner                     -       -        -       ✅
+--  Crear módulos/lecciones (sus cursos)        -      ✅       ✅       ✅
+--  Editar módulos/lecciones (sus cursos)       -      ✅       ✅       ✅
+--  Publicar/despublicar cursos                 -       -       ✅       ✅
+--  Ver estudiantes de sus cursos               -      ✅       ✅       ✅
+--  Ver TODOS los usuarios                      -       -       ✅(R)    ✅
+--  Crear usuarios con rol teacher              -       -        -       ✅
+--  Crear usuarios con rol director             -       -        -       ✅
+--  Cambiar rol de usuario                      -       -        -       ✅
+--  Gestionar bachillerato (programas/materias) -       -       ✅       ✅
+--  Ver pre-inscripciones bachillerato          -       -       ✅       ✅
+--  Cambiar estado pre-inscripción              -       -       ✅       ✅
+--  Asignar docente a materia                   -       -       ✅       ✅
+--  Emitir certificados                         -       -       ✅       ✅
+--  Ver reportes de progreso (todos)            -       -       ✅       ✅
+--  Ver reportes financieros                    -       -        -       ✅
+--  Exportar datos                              -       -        -       ✅
+--  Ver audit log                               -       -        -       ✅
+--  Revocar sesiones de usuarios                -       -        -       ✅
+--  Eliminar usuarios                           -       -        -       ✅
+--  Eliminar cursos                             -       -        -       ✅
+--  Configuración global del sistema            -       -        -       ✅
+--
+--  ✅ = Permitido  |  - = Denegado  |  ✅(R) = Solo lectura
+--
+-- ============================================================
+
+-- ============================================================
+-- IMPLEMENTACIÓN EN NODE.JS / EXPRESS
+-- ============================================================
+
+-- Ejemplo de middleware de verificación de rol:
+--
+-- const requireRole = (...allowedRoles) => {
+--   return (req, res, next) => {
+--     if (!req.user)
+--       return res.status(401).json({ error: 'No autenticado' });
+--
+--     if (!allowedRoles.includes(req.user.role))
+--       return res.status(403).json({ error: 'Acceso denegado para este rol' });
+--
+--     next();
+--   };
+-- };
+--
+-- Uso en rutas:
+--   router.get('/reports/financial',
+--     authMiddleware,
+--     requireRole('owner'),
+--     reportsController.financial);
+--
+--   router.put('/courses/:id/publish',
+--     authMiddleware,
+--     requireRole('director', 'owner'),
+--     coursesController.togglePublish);
+--
+--   router.post('/bachillerato/programs',
+--     authMiddleware,
+--     requireRole('director', 'owner'),
+--     bachilleratoController.createProgram);
+
+-- ============================================================
+-- REGLAS DE SEGURIDAD ADICIONALES
+-- ============================================================
+-- 1. Un teacher solo puede editar cursos donde created_by = su propio user_id
+-- 2. Un student solo puede ver lesson_progress de su propio user_id
+-- 3. Los videos nunca se sirven con URL directa pública; siempre pasan
+--    por un endpoint /api/v1/stream/:lessonId que verifica inscripción
+--    y genera una URL firmada temporal (expiración 2 horas)
+-- 4. Las contraseñas se cifran con bcrypt (rounds = 12) antes de guardar
+-- 5. Los JWT de acceso expiran en 15 minutos; los refresh tokens en 7 días
+-- 6. Todo cambio sensible (cambio de rol, eliminación) se registra en audit_log
+-- 7. Rate limiting: /api/v1/auth/login → máximo 10 intentos por IP por minuto

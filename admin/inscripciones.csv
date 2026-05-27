@@ -1,0 +1,6 @@
+ID_Inscripcion,Nombre_Estudiante,Email,Telefono,Curso,Metodo_Pago,Monto_USD,Referencia_Pago,Comprobante_Nombre,Comprobante_Tipo,Comprobante_Tamano_KB,Comprobante_Verificado,Estado,Fecha_Inscripcion
+ENR-001-DEMO,María González,maria.gonzalez@gmail.com,+58 412-1234567,Pocket IA,transfer,89.00,REF-20260526-001,comprobante_maria.jpg,image/jpeg,245.3,SI,active,2026-05-26T10:15:00.000Z
+ENR-002-DEMO,Carlos Rodríguez,carlos.rod@hotmail.com,+58 424-9876543,Pocket IA,zelle,89.00,ZELLE-20260525-87,pago_carlos.png,image/png,312.7,SI,active,2026-05-25T14:30:00.000Z
+ENR-003-DEMO,Ana Martínez,ana.martinez@gmail.com,+58 416-5554433,UI/UX Brutalismo,card,79.00,,sin_comprobante_tarjeta.pdf,application/pdf,88.1,NO,pending_review,2026-05-26T09:05:00.000Z
+ENR-004-DEMO,Luis Pérez,lperez@yahoo.com,+58 412-7778899,Backend Moderno,paypal,99.00,PAYPAL-TX-48291,recibo_paypal_luis.pdf,application/pdf,155.4,SI,active,2026-05-24T11:45:00.000Z
+ENR-005-DEMO,Sofía Hernández,sofia.hndz@gmail.com,+58 426-3332211,Pocket IA,transfer,89.00,REF-20260526-002,captura_pago_sofia.png,image/png,198.6,NO,pending_review,2026-05-26T16:22:00.000Z

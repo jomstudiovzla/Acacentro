@@ -1,0 +1,83 @@
+rol,nivel_jerarquico,descripcion,color_sugerido_ui
+student,1 (base),Estudiante inscrito en cursos. Accede al aula virtual y su propio progreso.,Azul (#005088)
+teacher,2,Docente que crea y gestiona el contenido de sus cursos asignados.,Verde (#11CAA0)
+director,3,Director académico con control sobre bachillerato y publicación de cursos.,Naranja (#FFE600)
+owner,4 (máximo),Dueño / Superadministrador con acceso total al sistema.,Rojo (#FF2C6D)
+
+recurso_o_accion,student,teacher,director,owner,notas
+Ver cursos publicados,SI,SI,SI,SI,Todos los roles ven el catálogo público
+Ver lección preview (gratuita),SI,SI,SI,SI,No requiere estar inscrito
+Ver aula virtual (lecciones de sus cursos),SI,SI,SI,SI,Student solo ve cursos en los que pagó
+Marcar lección como completada,SI,NO,NO,NO,Solo el estudiante gestiona su progreso
+Inscribirse en un curso,SI,NO,NO,NO,Solo estudiantes compran cursos
+Ver y editar perfil propio,SI,SI,SI,SI,Cada rol edita su propio perfil
+Ver sus propios certificados,SI,SI,SI,SI,Todos pueden ver sus certificados propios
+Acceder a /dashboard/student,SI,NO,NO,NO,Panel exclusivo del estudiante
+Acceder a /dashboard/teacher,NO,SI,NO,NO,Panel exclusivo del docente
+Acceder a /dashboard/director,NO,NO,SI,NO,Panel exclusivo del director
+Acceder a /dashboard/owner,NO,NO,NO,SI,Panel exclusivo del propietario
+Crear módulos y lecciones,NO,SI (sus cursos),SI (todos),SI (todos),Teacher solo gestiona sus propios cursos
+Editar módulos y lecciones,NO,SI (sus cursos),SI (todos),SI (todos),Teacher solo edita sus propios cursos
+Subir recursos/archivos a lección,NO,SI (sus cursos),SI,SI,PDFs y materiales del curso
+Publicar o despublicar un curso,NO,NO,SI,SI,Requiere director o superior
+Ver lista de estudiantes del sistema,NO,SI (sus cursos),SI (lectura),SI (completo),Teacher solo ve los de sus cursos
+Crear usuario con rol student,NO,NO,NO,SI,Solo el owner crea cuentas con cualquier rol
+Crear usuario con rol teacher,NO,NO,NO,SI,Solo el owner asigna docentes
+Crear usuario con rol director,NO,NO,NO,SI,Solo el owner puede crear directores
+Cambiar el rol de un usuario,NO,NO,NO,SI,Acción crítica solo para el owner
+Eliminar un usuario,NO,NO,NO,SI,Acción irreversible solo para owner
+Gestionar programas de bachillerato,NO,NO,SI,SI,Crear y editar años y materias
+Ver pre-inscripciones de bachillerato,NO,NO,SI,SI,Formularios enviados desde la web
+Cambiar estado de pre-inscripción,NO,NO,SI,SI,pending / contacted / enrolled / rejected
+Asignar docente a materia de bachillerato,NO,NO,SI,SI,Asignación académica
+Ver progreso de TODOS los estudiantes,NO,NO,SI,SI,Reporte académico general
+Emitir certificado manualmente,NO,NO,SI,SI,El sistema también lo emite automáticamente
+Ver reportes financieros,NO,NO,NO,SI,Solo el owner ve montos y referencias de pago
+Exportar datos del sistema,NO,NO,NO,SI,CSV o Excel de usuarios e inscripciones
+Ver audit log (registro de acciones),NO,NO,NO,SI,Historial completo de acciones del sistema
+Revocar sesión de cualquier usuario,NO,NO,NO,SI,Forzar logout de emergencia
+Eliminar un curso permanentemente,NO,NO,NO,SI,Acción irreversible
+Configuración global del sistema,NO,NO,NO,SI,Variables de sistema y configuración técnica
+Ver reportes de inscripciones (sin montos),NO,NO,SI,SI,Cantidad de inscritos por curso
+
+permisos_api,metodo,endpoint,student,teacher,director,owner,descripcion
+Ver cursos,GET,/api/v1/courses,SI,SI,SI,SI,Listado de cursos publicados
+Ver detalle de curso,GET,/api/v1/courses/:slug,SI,SI,SI,SI,Detalle de un curso
+Ver lección,GET,/api/v1/lessons/:id,SI (inscrito),SI,SI,SI,Verifica inscripción para student
+Stream seguro de video,GET,/api/v1/stream/:lessonId,SI (inscrito),SI,SI,SI,URL firmada temporal de 2 horas
+Guardar progreso,POST,/api/v1/progress,SI,NO,NO,NO,Solo el estudiante guarda su progreso
+Ver perfil propio,GET,/api/v1/me,SI,SI,SI,SI,Devuelve los datos del usuario autenticado
+Editar perfil propio,PUT,/api/v1/me,SI,SI,SI,SI,Modifica nombre / teléfono / avatar
+Ver mis certificados,GET,/api/v1/certificates/me,SI,SI,SI,SI,Certificados del usuario autenticado
+Crear módulo,POST,/api/v1/modules,NO,SI (sus cursos),SI,SI,Requiere ser owner del curso
+Editar módulo,PUT,/api/v1/modules/:id,NO,SI (sus cursos),SI,SI,Verifica propiedad del curso
+Crear lección,POST,/api/v1/lessons,NO,SI (sus cursos),SI,SI,Requiere ser owner del módulo
+Editar lección,PUT,/api/v1/lessons/:id,NO,SI (sus cursos),SI,SI,Verifica propiedad del módulo
+Publicar curso,PUT,/api/v1/courses/:id/publish,NO,NO,SI,SI,Cambia is_published = true
+Ver todos los usuarios,GET,/api/v1/users,NO,NO,SI (lectura),SI,Director solo lectura
+Crear usuario,POST,/api/v1/users,NO,NO,NO,SI,Requiere owner
+Cambiar rol de usuario,PUT,/api/v1/users/:id/role,NO,NO,NO,SI,Requiere owner
+Eliminar usuario,DELETE,/api/v1/users/:id,NO,NO,NO,SI,Requiere owner
+Crear programa de bachillerato,POST,/api/v1/bachillerato/programs,NO,NO,SI,SI,Requiere director o owner
+Editar programa de bachillerato,PUT,/api/v1/bachillerato/programs/:id,NO,NO,SI,SI,Requiere director o owner
+Ver pre-inscripciones,GET,/api/v1/bachillerato/preinscripciones,NO,NO,SI,SI,Requiere director o owner
+Actualizar estado de pre-inscripción,PUT,/api/v1/bachillerato/preinscripciones/:id,NO,NO,SI,SI,Requiere director o owner
+Emitir certificado,POST,/api/v1/certificates,NO,NO,SI,SI,Requiere director o owner
+Ver progreso de todos,GET,/api/v1/reports/progress,NO,NO,SI,SI,Requiere director o owner
+Ver reporte financiero,GET,/api/v1/reports/financial,NO,NO,NO,SI,Solo owner
+Exportar datos,GET,/api/v1/reports/export,NO,NO,NO,SI,Solo owner
+Ver audit log,GET,/api/v1/audit-log,NO,NO,NO,SI,Solo owner
+Revocar sesión de usuario,POST,/api/v1/auth/revoke/:userId,NO,NO,NO,SI,Solo owner
+
+rutas_frontend,ruta,student,teacher,director,owner,redirige_si_no_tiene_acceso
+Landing pública,/,SI,SI,SI,SI,No redirige (pública)
+Catálogo de cursos,/catalogo,SI,SI,SI,SI,No redirige (pública)
+Página de Bachillerato,/bachillerato,SI,SI,SI,SI,No redirige (pública)
+Página de curso,/cursos/:slug,SI,SI,SI,SI,No redirige (pública)
+Login,/login,SI,SI,SI,SI,Si ya está logueado → redirige a su dashboard
+Checkout,/checkout,SI,NO,NO,NO,Si no es student con sesión → /login
+Aula virtual,/classroom,SI (inscrito),SI,SI,SI,Si no está inscrito → /checkout
+Panel del estudiante,/dashboard/student,SI,NO,NO,NO,→ /dashboard/:rol correspondiente
+Panel del docente,/dashboard/teacher,NO,SI,NO,NO,→ /dashboard/:rol correspondiente
+Panel del director,/dashboard/director,NO,NO,SI,NO,→ /dashboard/:rol correspondiente
+Panel del propietario,/dashboard/owner,NO,NO,NO,SI,→ /dashboard/:rol correspondiente

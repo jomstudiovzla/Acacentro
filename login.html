@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión / Registrarse | ACACENTRO Creative Academy</title>
+    <meta name="description" content="Accede a tu cuenta ACACENTRO o crea una nueva para inscribirte en cursos y bachillerato tecnológico.">
+    <meta name="robots" content="noindex, nofollow">
+    <!-- Google Sign-In SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── Estilos exclusivos de la página de Login/Registro ── */
+        .auth-page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background-color: var(--color-white);
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--color-white);
+            border: var(--brutalist-border-thick);
+            box-shadow: var(--brutalist-shadow-lg);
+            border-radius: var(--radius-brutalist);
+            overflow: hidden;
+        }
+
+        /* Pestañas Login / Registro */
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: var(--brutalist-border-thick);
+        }
+
+        .auth-tab-btn {
+            padding: 18px;
+            background-color: var(--color-bg-gray);
+            border: none;
+            font-family: var(--font-heading);
+            font-weight: 900;
+            font-size: 1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+            letter-spacing: -0.5px;
+        }
+
+        .auth-tab-btn:first-child {
+            border-right: var(--brutalist-border-thin);
+        }
+
+        .auth-tab-btn.auth-tab-active {
+            background-color: var(--color-neon-yellow);
+            color: var(--color-black);
+        }
+
+        .auth-tab-btn:hover:not(.auth-tab-active) {
+            background-color: var(--color-white);
+        }
+
+        .auth-form-panel {
+            padding: 40px;
+            display: none;
+        }
+
+        .auth-form-panel.auth-panel-active {
+            display: block;
+        }
+
+        .auth-logo-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 28px;
+            text-decoration: none;
+        }
+
+        .auth-form-title {
+            font-size: 1.75rem;
+            margin-bottom: 6px;
+        }
+
+        .auth-form-subtitle {
+            font-size: 0.88rem;
+            color: #555;
+            margin-bottom: 28px;
+        }
+
+        .auth-form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 16px;
+        }
+
+        .auth-form-group label {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            color: var(--color-black);
+        }
+
+        .auth-form-group input,
+        .auth-form-group select {
+            padding: 12px 14px;
+            border: var(--brutalist-border-thin);
+            border-radius: var(--radius-brutalist);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            background-color: var(--color-white);
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .auth-form-group input:focus,
+        .auth-form-group select:focus {
+            border-color: var(--color-neon-cyan);
+            box-shadow: 0 0 0 3px rgba(17,202,160,0.18);
+        }
+
+        .auth-form-group input.input-error {
+            border-color: var(--color-neon-magenta);
+            box-shadow: 0 0 0 3px rgba(255,44,109,0.15);
+        }
+
+        .auth-field-error {
+            font-size: 0.78rem;
+            color: var(--color-neon-magenta);
+            font-weight: 700;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .auth-field-error.visible {
+            display: block;
+        }
+
+        .auth-submit-btn {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .auth-divider {
+            border: none;
+            border-top: var(--brutalist-border-thin);
+            margin: 24px 0;
+        }
+
+        .auth-switch-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .auth-switch-text button {
+            background: none;
+            border: none;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--color-neon-magenta);
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        /* Alerta de error/éxito dentro del formulario */
+        .auth-alert {
+            padding: 12px 16px;
+            border: var(--brutalist-border-thin);
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: none;
+            border-radius: var(--radius-brutalist);
+        }
+
+        .auth-alert.alert-error {
+            background-color: rgba(255,44,109,0.08);
+            border-color: var(--color-neon-magenta);
+            color: var(--color-neon-magenta);
+        }
+
+        .auth-alert.alert-success {
+            background-color: rgba(17,202,160,0.12);
+            border-color: var(--color-neon-cyan);
+            color: var(--color-neon-blue);
+        }
+
+        .auth-alert.visible {
+            display: block;
+        }
+
+        /* Rol selector */
+        .rol-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .rol-option-label {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .rol-option-label input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .rol-option-tile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 14px 10px;
+            border: var(--brutalist-border-thin);
+            border-radius: var(--radius-brutalist);
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            background-color: var(--color-bg-gray);
+            transition: all 0.12s ease;
+            text-align: center;
+        }
+
+        .rol-option-label input[type="radio"]:checked + .rol-option-tile {
+            background-color: var(--color-black);
+            color: var(--color-white);
+            border-color: var(--color-black);
+            box-shadow: var(--brutalist-shadow-sm);
+        }
+
+        .rol-option-tile .rol-emoji {
+            font-size: 1.4rem;
+        }
+
+        /* Indicador de contraseña segura */
+        .password-strength-bar {
+            height: 4px;
+            background-color: var(--color-bg-gray);
+            border-radius: 2px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .password-strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .password-strength-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* Back link */
+        .auth-back-link {
+            margin-top: 20px;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            color: var(--color-black);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .auth-back-link:hover {
+            color: var(--color-neon-magenta);
+        }
+
+        /* Estilos de Modales Google */
+        .google-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .google-modal-card {
+            background: var(--color-white);
+            border: var(--brutalist-border-thick);
+            box-shadow: var(--brutalist-shadow-lg);
+            border-radius: var(--radius-brutalist);
+            width: 100%;
+            max-width: 420px;
+            padding: 32px;
+            position: relative;
+            animation: modalSlideUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .google-account-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 16px;
+            border: var(--brutalist-border-thin);
+            border-radius: var(--radius-brutalist);
+            background: var(--color-white);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.1s ease;
+        }
+        .google-account-btn:hover {
+            background-color: var(--color-neon-yellow);
+            transform: translate(-2px, -2px);
+            box-shadow: var(--brutalist-shadow-sm);
+        }
+        .btn-google-demo:hover {
+            background-color: #f5f5f5 !important;
+            transform: translate(-2px, -2px);
+            box-shadow: var(--brutalist-shadow-sm) !important;
+        }
+        @keyframes modalSlideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 520px) {
+            .auth-form-panel { padding: 28px 20px; }
+            .rol-selector-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Google OAuth Client Configuration -->
+    <div id="g_id_onload"
+         data-client_id="1038592398495-mockclientid.apps.googleusercontent.com"
+         data-callback="handleGoogleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
+
+    <div class="auth-page-wrapper">
+
+        <div class="auth-card">
+            <!-- Pestañas -->
+            <div class="auth-tabs" role="tablist">
+                <button
+                    class="auth-tab-btn auth-tab-active"
+                    id="tab-login-btn"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="panel-login"
+                >Iniciar Sesión</button>
+                <button
+                    class="auth-tab-btn"
+                    id="tab-register-btn"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="panel-register"
+                >Registrarse</button>
+            </div>
+
+            <!-- ══════════════ PANEL: LOGIN ══════════════ -->
+            <div class="auth-form-panel auth-panel-active" id="panel-login" role="tabpanel" aria-labelledby="tab-login-btn">
+                <a href="index.html" class="auth-logo-top">
+                    <span class="logo-box">ACACENTRO</span>
+                </a>
+
+                <h1 class="auth-form-title">Bienvenido de vuelta</h1>
+                <p class="auth-form-subtitle">Ingresa tus credenciales para acceder a tu cuenta.</p>
+
+                <div class="auth-alert alert-error" id="login-alert-error" role="alert"></div>
+                <div class="auth-alert alert-success" id="login-alert-success" role="alert"></div>
+
+                <form id="form-login" novalidate>
+                    <div class="auth-form-group">
+                        <label for="login-email">Correo Electrónico</label>
+                        <input type="email" id="login-email" placeholder="correo@ejemplo.com" required autocomplete="email">
+                        <span class="auth-field-error" id="err-login-email">Correo electrónico inválido.</span>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" placeholder="Tu contraseña" required autocomplete="current-password">
+                        <span class="auth-field-error" id="err-login-password">La contraseña es obligatoria.</span>
+                    </div>
+                    <button type="submit" class="btn-brutalist btn-brutalist-cyan auth-submit-btn" id="btn-login">
+                        Entrar a mi Cuenta
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </button>
+                </form>
+
+                <div class="google-auth-container" style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:20px; width:100%;">
+                    <div style="display:flex; align-items:center; width:100%; gap:10px; font-family:var(--font-heading); font-weight:800; font-size:0.75rem; color:#666; text-transform:uppercase;">
+                        <span style="flex:1; border-top:var(--brutalist-border-thin); opacity:0.6;"></span>
+                        <span>O inicia sesión con</span>
+                        <span style="flex:1; border-top:var(--brutalist-border-thin); opacity:0.6;"></span>
+                    </div>
+
+                    <!-- Div de Google GSI (Standard Button) -->
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-shape="rectangular"
+                         data-theme="outline"
+                         data-text="signin_with"
+                         data-size="large"
+                         data-width="400">
+                    </div>
+
+                    <!-- Botón de Simulación de Cuenta de Google -->
+                    <button type="button" class="btn-brutalist btn-google-demo" onclick="openGoogleAccountsModal()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px; background-color:var(--color-white); border:var(--brutalist-border-thick); font-family:var(--font-heading); font-weight:900; font-size:0.9rem; text-transform:uppercase; padding:12px; cursor:pointer; border-radius:var(--radius-brutalist); transition:all 0.1s ease; box-shadow:var(--brutalist-shadow-sm);">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" style="width:18px; height:18px;">
+                        Demo Google Sign-In
+                    </button>
+                </div>
+
+                <hr class="auth-divider">
+                <p class="auth-switch-text">
+                    ¿Aún no tienes cuenta?
+                    <button id="go-to-register" onclick="switchTab('register')">Regístrate aquí</button>
+                </p>
+            </div>
+
+            <!-- ══════════════ PANEL: REGISTRO ══════════════ -->
+            <div class="auth-form-panel" id="panel-register" role="tabpanel" aria-labelledby="tab-register-btn">
+                <a href="index.html" class="auth-logo-top">
+                    <span class="logo-box">ACACENTRO</span>
+                </a>
+
+                <h2 class="auth-form-title">Crear Cuenta</h2>
+                <p class="auth-form-subtitle">Crea tu cuenta ACACENTRO. Tu registro queda guardado en el sistema.</p>
+
+                <div class="auth-alert alert-error" id="register-alert-error" role="alert"></div>
+                <div class="auth-alert alert-success" id="register-alert-success" role="alert"></div>
+
+                <form id="form-register" novalidate>
+                    <!-- Selección de rol (oculto temporalmente; forzado a Estudiante por defecto) -->
+                    <div class="auth-form-group" style="display: none;">
+                        <label>Soy…</label>
+                        <div class="rol-selector-grid" id="rol-selector">
+                            <label class="rol-option-label">
+                                <input type="radio" name="reg-role" value="student" checked>
+                                <span class="rol-option-tile">
+                                    <span class="rol-emoji">🎓</span>
+                                    Estudiante
+                                </span>
+                            </label>
+                            <label class="rol-option-label">
+                                <input type="radio" name="reg-role" value="teacher">
+                                <span class="rol-option-tile">
+                                    <span class="rol-emoji">📚</span>
+                                    Profesor
+                                </span>
+                            </label>
+                            <label class="rol-option-label">
+                                <input type="radio" name="reg-role" value="director">
+                                <span class="rol-option-tile">
+                                    <span class="rol-emoji">🏛️</span>
+                                    Director
+                                </span>
+                            </label>
+                            <label class="rol-option-label">
+                                <input type="radio" name="reg-role" value="owner">
+                                <span class="rol-option-tile">
+                                    <span class="rol-emoji">👑</span>
+                                    Dueño/Admin
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="auth-form-group">
+                        <label for="reg-name">Nombre Completo</label>
+                        <input type="text" id="reg-name" placeholder="Tu nombre y apellido" required autocomplete="name">
+                        <span class="auth-field-error" id="err-reg-name">El nombre es obligatorio.</span>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="reg-email">Correo Electrónico</label>
+                        <input type="email" id="reg-email" placeholder="correo@ejemplo.com" required autocomplete="email">
+                        <span class="auth-field-error" id="err-reg-email">Correo electrónico inválido.</span>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="reg-phone">Teléfono / WhatsApp</label>
+                        <input type="tel" id="reg-phone" placeholder="+58 412 0000000" autocomplete="tel">
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="reg-password">Contraseña</label>
+                        <input type="password" id="reg-password" placeholder="Mínimo 8 caracteres" required autocomplete="new-password">
+                        <div class="password-strength-bar">
+                            <div class="password-strength-fill" id="pw-strength-fill"></div>
+                        </div>
+                        <span class="password-strength-label" id="pw-strength-label">Escribe una contraseña</span>
+                        <span class="auth-field-error" id="err-reg-password">Mínimo 8 caracteres.</span>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="reg-password-confirm">Confirmar Contraseña</label>
+                        <input type="password" id="reg-password-confirm" placeholder="Repite tu contraseña" required autocomplete="new-password">
+                        <span class="auth-field-error" id="err-reg-confirm">Las contraseñas no coinciden.</span>
+                    </div>
+
+                    <button type="submit" class="btn-brutalist btn-brutalist-yellow auth-submit-btn" id="btn-register">
+                        Crear Mi Cuenta
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </button>
+                </form>
+
+                <div class="google-auth-container" style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:20px; width:100%;">
+                    <div style="display:flex; align-items:center; width:100%; gap:10px; font-family:var(--font-heading); font-weight:800; font-size:0.75rem; color:#666; text-transform:uppercase;">
+                        <span style="flex:1; border-top:var(--brutalist-border-thin); opacity:0.6;"></span>
+                        <span>O regístrate con</span>
+                        <span style="flex:1; border-top:var(--brutalist-border-thin); opacity:0.6;"></span>
+                    </div>
+
+                    <!-- Div de Google GSI (Standard Button) -->
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-shape="rectangular"
+                         data-theme="outline"
+                         data-text="signup_with"
+                         data-size="large"
+                         data-width="400">
+                    </div>
+
+                    <!-- Botón de Simulación de Cuenta de Google -->
+                    <button type="button" class="btn-brutalist btn-google-demo" onclick="openGoogleAccountsModal()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px; background-color:var(--color-white); border:var(--brutalist-border-thick); font-family:var(--font-heading); font-weight:900; font-size:0.9rem; text-transform:uppercase; padding:12px; cursor:pointer; border-radius:var(--radius-brutalist); transition:all 0.1s ease; box-shadow:var(--brutalist-shadow-sm);">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" style="width:18px; height:18px;">
+                        Demo Google Sign-In
+                    </button>
+                </div>
+
+                <hr class="auth-divider">
+                <p class="auth-switch-text">
+                    ¿Ya tienes cuenta?
+                    <button onclick="switchTab('login')">Iniciar sesión</button>
+                </p>
+            </div>
+        </div>
+
+        <a href="index.html" class="auth-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                <polyline points="19 12 5 12"/>
+                <polyline points="12 5 5 12 12 19"/>
+            </svg>
+            Volver al inicio
+        </a>
+
+    </div>
+
+    <!-- ══════════════ MODALES DE GOOGLE SIGN-IN ══════════════ -->
+    <!-- 1. Selector de Cuentas Google (Demo / Simulación) -->
+    <div class="google-modal-overlay" id="google-accounts-modal" style="display:none;">
+        <div class="google-modal-card">
+            <button onclick="closeGoogleAccountsModal()" style="position:absolute; top:15px; right:15px; background:none; border:none; font-size:1.5rem; cursor:pointer; font-weight:bold; color:var(--color-black);">&times;</button>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" style="width:24px; height:24px;">
+                <h3 style="font-family:var(--font-heading); font-weight:900; font-size:1.2rem; text-transform:uppercase; margin:0; letter-spacing:-0.5px;">Acceder con Google</h3>
+            </div>
+            <p style="font-size:0.85rem; color:#555; margin-bottom:20px; line-height:1.4;">
+                Selecciona una cuenta de Google para simular el flujo completo de autenticación y registro en modo demo:
+            </p>
+            
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <!-- Cuenta 1 -->
+                <button class="google-account-btn" onclick="selectMockGoogleAccount('Ana María González', 'ana.gonzalez@gmail.com', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80')">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80" style="width:38px; height:38px; border-radius:50%; border:1px solid var(--color-black); object-fit:cover;" alt="Ana">
+                    <div>
+                        <div style="font-family:var(--font-heading); font-weight:800; font-size:0.85rem; color:var(--color-black);">Ana María González</div>
+                        <div style="font-size:0.75rem; color:#666;">ana.gonzalez@gmail.com</div>
+                    </div>
+                </button>
+                
+                <!-- Cuenta 2 -->
+                <button class="google-account-btn" onclick="selectMockGoogleAccount('Pedro Pérez', 'pedro.perez@gmail.com', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80')">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" style="width:38px; height:38px; border-radius:50%; border:1px solid var(--color-black); object-fit:cover;" alt="Pedro">
+                    <div>
+                        <div style="font-family:var(--font-heading); font-weight:800; font-size:0.85rem; color:var(--color-black);">Pedro Pérez</div>
+                        <div style="font-size:0.75rem; color:#666;">pedro.perez@gmail.com</div>
+                    </div>
+                </button>
+                
+                <!-- Cuenta 3 -->
+                <button class="google-account-btn" onclick="selectMockGoogleAccount('María Alejandra Silva', 'm.silva@gmail.com', 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&auto=format&fit=crop&q=80')">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&auto=format&fit=crop&q=80" style="width:38px; height:38px; border-radius:50%; border:1px solid var(--color-black); object-fit:cover;" alt="María">
+                    <div>
+                        <div style="font-family:var(--font-heading); font-weight:800; font-size:0.85rem; color:var(--color-black);">María Alejandra Silva</div>
+                        <div style="font-size:0.75rem; color:#666;">m.silva@gmail.com</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Modal de Teléfono Obligatorio (Phone Enforcer Guard) -->
+    <div class="google-modal-overlay" id="google-phone-enforcer-modal" style="display:none; z-index:10001; background:rgba(0,0,0,0.85);">
+        <div class="google-modal-card" style="max-width:440px; text-align:center;">
+            <div style="width:64px; height:64px; background:var(--color-neon-yellow); border:var(--brutalist-border-thick); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.8rem; margin:0 auto 16px auto; box-shadow:var(--brutalist-shadow-sm);">
+                📱
+            </div>
+            
+            <h3 style="font-family:var(--font-heading); font-weight:900; font-size:1.3rem; text-transform:uppercase; margin-bottom:8px; letter-spacing:-0.5px;">¡Registro de Google Exitoso!</h3>
+            <p style="font-size:0.88rem; color:#444; margin-bottom:20px; line-height:1.45; padding:0 10px;">
+                Para completar tu ficha de estudiante en <strong>ACACENTRO</strong>, requerimos tu número de <strong>Teléfono o WhatsApp</strong> móvil.
+            </p>
+            
+            <div style="background:#f4f4f4; border:var(--brutalist-border-thin); border-radius:var(--radius-brutalist); padding:12px; margin-bottom:20px; display:flex; align-items:center; gap:10px; text-align:left;">
+                <img id="enforcer-avatar" src="" style="width:36px; height:36px; border-radius:50%; border:1px solid var(--color-black); object-fit:cover;" alt="Avatar">
+                <div>
+                    <div id="enforcer-name" style="font-family:var(--font-heading); font-weight:800; font-size:0.85rem; color:var(--color-black);"></div>
+                    <div id="enforcer-email" style="font-size:0.75rem; color:#666;"></div>
+                </div>
+            </div>
+            
+            <form id="google-phone-form" novalidate>
+                <div style="display:flex; flex-direction:column; text-align:left; margin-bottom:20px;">
+                    <label for="enforcer-phone" style="font-family:var(--font-heading); font-weight:800; font-size:0.75rem; text-transform:uppercase; margin-bottom:6px; color:var(--color-black);">Teléfono / WhatsApp</label>
+                    <input type="tel" id="enforcer-phone" placeholder="Ej: +58 424-1234567" style="padding:12px; border:var(--brutalist-border-thick); border-radius:var(--radius-brutalist); font-family:var(--font-body); font-size:0.95rem; outline:none; transition:all 0.15s ease;" required>
+                    <span class="auth-field-error" id="err-enforcer-phone" style="font-size:0.75rem; color:var(--color-neon-magenta); font-weight:700; margin-top:4px; display:none;">El teléfono es requerido para la inscripción.</span>
+                </div>
+                
+                <button type="submit" class="btn-brutalist btn-brutalist-cyan auth-submit-btn" style="width:100%;">
+                    Completar Inscripción
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="margin-left:8px;">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        /* ── Lógica de pestañas ── */
+        function switchTab(tab) {
+            const loginBtn    = document.getElementById('tab-login-btn');
+            const registerBtn = document.getElementById('tab-register-btn');
+            const loginPanel  = document.getElementById('panel-login');
+            const regPanel    = document.getElementById('panel-register');
+ 
+            if (tab === 'login') {
+                loginBtn.classList.add('auth-tab-active');
+                registerBtn.classList.remove('auth-tab-active');
+                loginPanel.classList.add('auth-panel-active');
+                regPanel.classList.remove('auth-panel-active');
+                loginBtn.setAttribute('aria-selected', 'true');
+                registerBtn.setAttribute('aria-selected', 'false');
+            } else {
+                registerBtn.classList.add('auth-tab-active');
+                loginBtn.classList.remove('auth-tab-active');
+                regPanel.classList.add('auth-panel-active');
+                loginPanel.classList.remove('auth-panel-active');
+                registerBtn.setAttribute('aria-selected', 'true');
+                loginBtn.setAttribute('aria-selected', 'false');
+            }
+        }
+ 
+        document.getElementById('tab-login-btn').addEventListener('click', () => switchTab('login'));
+        document.getElementById('tab-register-btn').addEventListener('click', () => switchTab('register'));
+ 
+        /* ── Si la URL tiene ?tab=register, abrir ese panel ── */
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('tab') === 'register') switchTab('register');
+
+        /* ── Lógica de Modales Google (Demo & Enforcer) ── */
+        function openGoogleAccountsModal() {
+            document.getElementById('google-accounts-modal').style.display = 'flex';
+        }
+        function closeGoogleAccountsModal() {
+            document.getElementById('google-accounts-modal').style.display = 'none';
+        }
+        function selectMockGoogleAccount(name, email, avatarUrl) {
+            closeGoogleAccountsModal();
+            // Delegar a la lógica de auth.js pasándole los datos simulados
+            if (typeof window.handleMockGoogleLogin === 'function') {
+                window.handleMockGoogleLogin({ name, email, picture: avatarUrl });
+            }
+        }
+        
+        // Exponer globales para llamar desde js/auth.js
+        window.openGooglePhoneEnforcerModal = function(name, email, avatarUrl) {
+            document.getElementById('enforcer-avatar').src = avatarUrl || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100';
+            document.getElementById('enforcer-name').textContent = name;
+            document.getElementById('enforcer-email').textContent = email;
+            document.getElementById('google-phone-enforcer-modal').style.display = 'flex';
+            document.getElementById('enforcer-phone').focus();
+        };
+        window.closeGooglePhoneEnforcerModal = function() {
+            document.getElementById('google-phone-enforcer-modal').style.display = 'none';
+        };
+
+        // Formulario del teléfono
+        document.getElementById('google-phone-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const phoneInput = document.getElementById('enforcer-phone');
+            const phoneVal = phoneInput.value.trim();
+            const errEl = document.getElementById('err-enforcer-phone');
+            
+            if (!phoneVal) {
+                errEl.style.display = 'block';
+                phoneInput.classList.add('input-error');
+                return;
+            } else {
+                errEl.style.display = 'none';
+                phoneInput.classList.remove('input-error');
+            }
+            
+            if (typeof window.submitGooglePhoneRegister === 'function') {
+                window.submitGooglePhoneRegister(phoneVal);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Seguro | Creative Academy - ACACENTRO</title>
+    <meta name="robots" content="noindex, nofollow">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ─── Estilos exclusivos de Checkout ─── */
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Selector de método de pago */
+        .payment-choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .choice-container {
+            cursor: pointer;
+        }
+
+        .choice-container input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .choice-tile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            border: var(--brutalist-border-thin);
+            border-radius: var(--radius-brutalist);
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            background-color: var(--color-bg-gray);
+            transition: all 0.12s ease;
+            cursor: pointer;
+        }
+
+        .choice-container input[type="radio"]:checked + .choice-tile {
+            background-color: var(--color-black);
+            color: var(--color-white);
+            border-color: var(--color-black);
+            box-shadow: var(--brutalist-shadow-sm);
+        }
+
+        /* Zona de carga del comprobante */
+        .comprobante-dropzone {
+            border: 3px dashed var(--color-black);
+            border-radius: var(--radius-brutalist);
+            padding: 28px 20px;
+            text-align: center;
+            background-color: var(--color-bg-gray);
+            cursor: pointer;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+            position: relative;
+        }
+
+        .comprobante-dropzone:hover,
+        .comprobante-dropzone.drag-over {
+            background-color: rgba(17,202,160,0.08);
+            border-color: var(--color-neon-cyan);
+        }
+
+        .comprobante-dropzone.has-file {
+            background-color: rgba(17,202,160,0.12);
+            border-color: var(--color-neon-cyan);
+            border-style: solid;
+        }
+
+        .comprobante-dropzone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .dropzone-icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .dropzone-label {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .dropzone-hint {
+            font-size: 0.78rem;
+            color: #777;
+        }
+
+        .dropzone-file-info {
+            margin-top: 12px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 0.82rem;
+            color: var(--color-neon-blue);
+            text-transform: uppercase;
+        }
+
+        .dropzone-file-info.visible {
+            display: flex;
+        }
+
+        /* Vista previa del comprobante */
+        .comprobante-preview-wrap {
+            margin-top: 14px;
+            display: none;
+        }
+
+        .comprobante-preview-wrap.visible {
+            display: block;
+        }
+
+        .comprobante-preview-img {
+            width: 100%;
+            max-height: 180px;
+            object-fit: contain;
+            border: var(--brutalist-border-thin);
+            border-radius: var(--radius-brutalist);
+            background: #fff;
+        }
+
+        .comprobante-preview-pdf {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border: var(--brutalist-border-thin);
+            border-radius: var(--radius-brutalist);
+            background-color: var(--color-white);
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--color-black);
+        }
+
+        .btn-remove-file {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-neon-magenta);
+            font-weight: 800;
+            font-family: var(--font-heading);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border: 1px solid var(--color-neon-magenta);
+            border-radius: var(--radius-brutalist);
+            margin-top: 8px;
+        }
+
+        /* CRM Log texto */
+        .crm-log-text {
+            font-size: 0.8rem;
+            color: var(--color-neon-blue);
+            font-weight: 700;
+            margin-top: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="academy-header">
+        <div class="academy-header-container">
+            <a href="index.html" class="academy-logo">
+                <span class="logo-box">ACACENTRO</span>
+            </a>
+            <span style="background-color:var(--color-neon-magenta); color:var(--color-white); border:var(--brutalist-border-thin); font-family:var(--font-heading); font-weight:800; font-size:0.85rem; text-transform:uppercase; padding:6px 14px;">
+                🔒 Pago Seguro
+            </span>
+        </div>
+    </header>
+
+    <main class="checkout-layout">
+        <h1 class="checkout-title-brutal">Finalizar Inscripción</h1>
+        <p class="checkout-subtitle">Completa tus datos y adjunta el comprobante de pago para activar tus credenciales en el Aula Virtual.</p>
+
+        <div class="checkout-grid">
+
+            <!-- ══ Columna izquierda: Formulario ══ -->
+            <div class="checkout-fields-side">
+                <form id="form-brutalist-checkout" novalidate>
+
+                    <!-- Datos Personales -->
+                    <div class="checkout-card-brutalist" style="margin-bottom:24px;">
+                        <h3>Datos Personales</h3>
+                        <div class="checkout-form-group">
+                            <label for="checkout-name">Nombre Completo</label>
+                            <input type="text" id="checkout-name" placeholder="Tu nombre completo" required autocomplete="name">
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="checkout-email">Correo Electrónico</label>
+                            <input type="email" id="checkout-email" placeholder="correo@ejemplo.com" required autocomplete="email">
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="checkout-phone">Teléfono de Contacto</label>
+                            <input type="tel" id="checkout-phone" placeholder="+58 412-0000000" required autocomplete="tel">
+                        </div>
+                    </div>
+
+                    <!-- Método de Pago -->
+                    <div class="checkout-card-brutalist" style="margin-bottom:24px;">
+                        <h3>Método de Pago</h3>
+                        <div class="payment-choices">
+                            <label class="choice-container">
+                                <input type="radio" name="checkoutPay" value="card" checked>
+                                <span class="choice-tile">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                        <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+                                    </svg>
+                                    Tarjeta
+                                </span>
+                            </label>
+                            <label class="choice-container">
+                                <input type="radio" name="checkoutPay" value="paypal">
+                                <span class="choice-tile">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h5a3 3 0 010 6H9"/>
+                                    </svg>
+                                    PayPal
+                                </span>
+                            </label>
+                            <label class="choice-container">
+                                <input type="radio" name="checkoutPay" value="transfer">
+                                <span class="choice-tile">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                        <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/>
+                                        <polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/>
+                                    </svg>
+                                    Transferencia
+                                </span>
+                            </label>
+                            <label class="choice-container">
+                                <input type="radio" name="checkoutPay" value="zelle">
+                                <span class="choice-tile">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                        <circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/>
+                                    </svg>
+                                    Zelle / Cripto
+                                </span>
+                            </label>
+                        </div>
+
+                        <!-- Campos de tarjeta (visibles solo cuando se selecciona "card") -->
+                        <div id="checkout-card-fields">
+                            <div class="checkout-form-group">
+                                <label for="ch-card-num">Número de Tarjeta</label>
+                                <input type="text" id="ch-card-num" placeholder="4152 0000 0000 0000" maxlength="19">
+                            </div>
+                            <div class="input-row">
+                                <div class="checkout-form-group">
+                                    <label for="ch-card-date">Vencimiento</label>
+                                    <input type="text" id="ch-card-date" placeholder="MM/AA" maxlength="5">
+                                </div>
+                                <div class="checkout-form-group">
+                                    <label for="ch-card-cvv">CVC / CVV</label>
+                                    <input type="password" id="ch-card-cvv" placeholder="000" maxlength="4">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Referencia de transferencia/Zelle (visible para esos métodos) -->
+                        <div id="checkout-transfer-fields" style="display:none;">
+                            <div class="checkout-form-group">
+                                <label for="ch-transfer-ref">Número de Referencia</label>
+                                <input type="text" id="ch-transfer-ref" placeholder="Ej: REF-20260526-001">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ══ COMPROBANTE DE PAGO (NUEVO) ══ -->
+                    <div class="checkout-card-brutalist">
+                        <h3>Comprobante de Pago</h3>
+                        <p style="font-size:0.9rem; color:#555; margin-bottom:20px;">
+                            Sube una captura de pantalla, foto o PDF de tu comprobante. Es obligatorio para verificar tu pago y activar tu acceso.
+                        </p>
+
+                        <div class="comprobante-dropzone" id="comprobante-dropzone">
+                            <input
+                                type="file"
+                                id="comprobante-input"
+                                name="comprobante"
+                                accept="image/jpeg,image/png,image/webp,application/pdf"
+                                aria-label="Subir comprobante de pago"
+                            >
+                            <span class="dropzone-icon">📎</span>
+                            <span class="dropzone-label">Adjuntar Comprobante</span>
+                            <span class="dropzone-hint">JPG, PNG, WEBP o PDF · Máximo 5 MB</span>
+                        </div>
+
+                        <!-- Info del archivo seleccionado -->
+                        <div class="dropzone-file-info" id="dropzone-file-info">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span id="dropzone-filename">archivo.jpg</span>
+                            <span id="dropzone-filesize" style="color:#999; font-size:0.75rem;"></span>
+                            <button type="button" class="btn-remove-file" id="btn-remove-comprobante">✕ Quitar</button>
+                        </div>
+
+                        <!-- Vista previa (imagen o PDF) -->
+                        <div class="comprobante-preview-wrap" id="comprobante-preview-wrap">
+                            <img src="" alt="Vista previa del comprobante" class="comprobante-preview-img" id="comprobante-preview-img" style="display:none;">
+                            <div class="comprobante-preview-pdf" id="comprobante-preview-pdf" style="display:none;">
+                                📄 <span id="pdf-filename-label">comprobante.pdf</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- ══ Columna derecha: Resumen y botón ══ -->
+            <div class="order-summary-side">
+                <div class="order-summary-box">
+                    <div class="summary-details-card">
+                        <h3 style="font-size:1.15rem; margin-bottom:20px; border-bottom:2px solid black; padding-bottom:8px;">Tu Compra</h3>
+                        <div class="summary-item-line">
+                            <span>Curso Pocket IA × 1</span>
+                            <span>$89.00</span>
+                        </div>
+                        <div class="summary-item-line">
+                            <span>Acceso de por Vida</span>
+                            <span>Incluido</span>
+                        </div>
+                        <div class="summary-item-line">
+                            <span>Materiales Adicionales</span>
+                            <span>Gratis</span>
+                        </div>
+                        <div class="summary-item-line total-line">
+                            <span>Total a Pagar</span>
+                            <span style="color:var(--color-neon-magenta);">$89.00 USD</span>
+                        </div>
+                    </div>
+
+                    <!-- Estado del comprobante en el resumen -->
+                    <div id="comprobante-status-box" style="border:var(--brutalist-border-thin); padding:14px 16px; border-radius:var(--radius-brutalist); background-color:var(--color-bg-gray); display:none;">
+                        <p style="font-family:var(--font-heading); font-weight:800; font-size:0.78rem; text-transform:uppercase; color:var(--color-neon-blue); margin-bottom:4px;">Comprobante adjunto:</p>
+                        <p style="font-size:0.82rem; color:#374151; font-weight:600;" id="comprobante-status-name">—</p>
+                    </div>
+
+                    <button type="submit" form="form-brutalist-checkout" class="btn-brutalist btn-brutalist-cyan btn-massive-cta" id="btn-submit-order">
+                        Confirmar y Pagar
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </button>
+
+                    <p style="font-size:0.75rem; color:#888; text-align:center; margin-top:12px; font-weight:600;">
+                        🔒 Tus datos están protegidos. El comprobante se guarda de forma segura.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ══ Overlay de procesamiento ══ -->
+    <div class="webhook-overlay" id="checkout-webhook-overlay" style="display:none;">
+        <div class="webhook-loading-card" id="webhook-loading-state">
+            <h2>Procesando Inscripción</h2>
+            <p>Verificando tu comprobante y registrando tu inscripción…</p>
+            <div class="webhook-spinner"></div>
+            <p class="crm-log-text" id="webhook-crm-log">Iniciando proceso…</p>
+        </div>
+
+        <div class="webhook-loading-card" id="webhook-success-state" style="display:none;">
+            <div class="success-graphic">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="4" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </div>
+            <h2>¡Inscripción Confirmada!</h2>
+            <p>Tu comprobante fue recibido y tu inscripción quedó registrada en el sistema.</p>
+
+            <div style="border:var(--brutalist-border-thin); background-color:var(--color-bg-gray); padding:20px; text-align:left; margin-bottom:24px; border-radius:var(--radius-brutalist);">
+                <p style="font-weight:800; font-size:0.88rem; font-family:var(--font-heading); text-transform:uppercase; margin-bottom:10px;">Detalles de tu inscripción:</p>
+                <p style="font-size:0.9rem; margin-bottom:4px;"><strong>Estudiante:</strong> <span id="success-name">—</span></p>
+                <p style="font-size:0.9rem; margin-bottom:4px;"><strong>Correo:</strong> <span id="success-email">—</span></p>
+                <p style="font-size:0.9rem; margin-bottom:4px;"><strong>Método:</strong> <span id="success-method">—</span></p>
+                <p style="font-size:0.9rem; margin-bottom:4px;"><strong>Comprobante:</strong> <span id="success-comprobante">—</span></p>
+                <p style="font-size:0.9rem; color:var(--color-neon-magenta); font-weight:700; margin-top:12px;">⏳ Un administrador revisará tu comprobante de pago para activar tu acceso.</p>
+            </div>
+
+            <!-- Botón para descargar hoja de cálculo de la inscripción -->
+            <button id="btn-download-enrollment-csv" class="btn-brutalist btn-brutalist-yellow btn-block" style="margin-bottom:16px;">
+                📥 Descargar Comprobante de Inscripción (CSV)
+            </button>
+
+            <a href="index.html#catalogo" class="btn-brutalist btn-brutalist-cyan btn-block">
+                Volver al Catálogo de Cursos
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+    /* ==========================================================================
+       ACACENTRO — Lógica de Checkout con Comprobante de Pago
+       ========================================================================== */
+    (function () {
+        'use strict';
+
+        // Enforce student session
+        const session = window.acacentroRequireAuth ? window.acacentroRequireAuth(['student', 'teacher', 'director', 'owner']) : null;
+        if (!session) return;
+
+        // Pre-fill registered user details
+        function prefillSessionData() {
+            const nameField = document.getElementById('checkout-name');
+            const emailField = document.getElementById('checkout-email');
+            const phoneField = document.getElementById('checkout-phone');
+            
+            if (nameField) {
+                nameField.value = session.name || '';
+                nameField.setAttribute('readonly', 'true');
+                nameField.style.backgroundColor = '#e5e7eb';
+                nameField.style.cursor = 'not-allowed';
+            }
+            if (emailField) {
+                emailField.value = session.email || '';
+                emailField.setAttribute('readonly', 'true');
+                emailField.style.backgroundColor = '#e5e7eb';
+                emailField.style.cursor = 'not-allowed';
+            }
+            if (phoneField && session.phone) {
+                phoneField.value = session.phone;
+            }
+        }
+        
+        prefillSessionData();
+        window.addEventListener('DOMContentLoaded', prefillSessionData);
+
+        const STORAGE_ENROLLMENTS_KEY = 'acacentro_enrollments_db';
+
+        /* ── Helpers ── */
+        function getEnrollments() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_ENROLLMENTS_KEY) || '[]'); }
+            catch { return []; }
+        }
+
+        function saveEnrollments(list) {
+            localStorage.setItem(STORAGE_ENROLLMENTS_KEY, JSON.stringify(list));
+        }
+
+        /* ── Formatear tamaño de archivo ── */
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        /* ── Estado del comprobante ── */
+        let comprobanteFile = null;    // Objeto File
+        let comprobanteB64  = null;    // Base64 del archivo
+
+        const comprobanteInput      = document.getElementById('comprobante-input');
+        const dropzone              = document.getElementById('comprobante-dropzone');
+        const fileInfo              = document.getElementById('dropzone-file-info');
+        const filenameEl            = document.getElementById('dropzone-filename');
+        const filesizeEl            = document.getElementById('dropzone-filesize');
+        const previewWrap           = document.getElementById('comprobante-preview-wrap');
+        const previewImg            = document.getElementById('comprobante-preview-img');
+        const previewPdf            = document.getElementById('comprobante-preview-pdf');
+        const pdfFilenameLabel      = document.getElementById('pdf-filename-label');
+        const btnRemove             = document.getElementById('btn-remove-comprobante');
+        const statusBox             = document.getElementById('comprobante-status-box');
+        const statusName            = document.getElementById('comprobante-status-name');
+
+        /* ── Procesar archivo seleccionado ── */
+        function handleFile(file) {
+            if (!file) return;
+
+            /* Validar tamaño (5 MB máximo) */
+            if (file.size > 5 * 1024 * 1024) {
+                alert('El archivo supera el límite de 5 MB. Por favor elige un archivo más pequeño.');
+                comprobanteInput.value = '';
+                return;
+            }
+
+            /* Validar tipo */
+            const allowed = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+            if (!allowed.includes(file.type)) {
+                alert('Formato no permitido. Usa JPG, PNG, WEBP o PDF.');
+                comprobanteInput.value = '';
+                return;
+            }
+
+            comprobanteFile = file;
+
+            /* Leer como Base64 para guardar en localStorage */
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                comprobanteB64 = e.target.result;  // data:image/jpeg;base64,...
+
+                /* Mostrar info del archivo */
+                filenameEl.textContent = file.name;
+                filesizeEl.textContent = formatBytes(file.size);
+                fileInfo.classList.add('visible');
+                dropzone.classList.add('has-file');
+
+                /* Vista previa */
+                if (file.type.startsWith('image/')) {
+                    previewImg.src = comprobanteB64;
+                    previewImg.style.display = 'block';
+                    previewPdf.style.display  = 'none';
+                } else {
+                    previewImg.style.display  = 'none';
+                    previewPdf.style.display  = 'flex';
+                    pdfFilenameLabel.textContent = file.name;
+                }
+
+                previewWrap.classList.add('visible');
+
+                /* Actualizar estado en resumen lateral */
+                statusBox.style.display  = 'block';
+                statusName.textContent   = `${file.name} (${formatBytes(file.size)})`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        /* ── Eventos del input de archivo ── */
+        comprobanteInput.addEventListener('change', function () {
+            handleFile(this.files[0]);
+        });
+
+        /* ── Drag & Drop ── */
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('drag-over');
+        });
+        dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file) handleFile(file);
+        });
+
+        /* ── Quitar archivo ── */
+        btnRemove.addEventListener('click', function () {
+            comprobanteFile = null;
+            comprobanteB64  = null;
+            comprobanteInput.value = '';
+            fileInfo.classList.remove('visible');
+            previewWrap.classList.remove('visible');
+            dropzone.classList.remove('has-file');
+            previewImg.src = '';
+            statusBox.style.display = 'none';
+        });
+
+        /* ── Alternar campos según método de pago ── */
+        const payInputs       = document.querySelectorAll('input[name="checkoutPay"]');
+        const cardFields      = document.getElementById('checkout-card-fields');
+        const transferFields  = document.getElementById('checkout-transfer-fields');
+
+        payInputs.forEach(input => {
+            input.addEventListener('change', function () {
+                if (this.value === 'card') {
+                    cardFields.style.display     = 'block';
+                    transferFields.style.display = 'none';
+                } else {
+                    cardFields.style.display     = 'none';
+                    transferFields.style.display = this.value === 'transfer' || this.value === 'zelle'
+                        ? 'block' : 'none';
+                }
+            });
+        });
+
+        /* ── Exportar inscripciones a CSV ── */
+        function exportEnrollmentsCSV() {
+            const list = getEnrollments();
+            if (list.length === 0) {
+                alert('No hay inscripciones registradas todavía.');
+                return;
+            }
+
+            const headers = [
+                'ID_Inscripcion', 'Nombre', 'Email', 'Telefono',
+                'Curso', 'Metodo_Pago', 'Monto_USD', 'Referencia',
+                'Comprobante_Nombre', 'Comprobante_Tipo', 'Comprobante_Tamano_KB',
+                'Fecha_Inscripcion', 'Estado'
+            ];
+
+            const rows = list.map(e => [
+                e.id,
+                `"${e.studentName}"`,
+                e.email,
+                e.phone || '',
+                `"${e.course}"`,
+                e.paymentMethod,
+                e.amountUSD,
+                e.transferRef || '',
+                `"${e.comprobanteName || 'Sin comprobante'}"`,
+                e.comprobanteType || '',
+                e.comprobanteSizeKB || '',
+                e.enrolledAt,
+                e.status
+            ]);
+
+            const csvContent = [
+                headers.join(','),
+                ...rows.map(r => r.join(','))
+            ].join('\n');
+
+            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url  = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href     = url;
+            link.download = `acacentro_inscripciones_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        window.acacentroExportEnrollmentsCSV = exportEnrollmentsCSV;
+
+        /* ── Envío del formulario ── */
+        const form     = document.getElementById('form-brutalist-checkout');
+        const overlay  = document.getElementById('checkout-webhook-overlay');
+        const crmLog   = document.getElementById('webhook-crm-log');
+        const loadSt   = document.getElementById('webhook-loading-state');
+        const succSt   = document.getElementById('webhook-success-state');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const studentName  = document.getElementById('checkout-name').value.trim();
+            const studentEmail = document.getElementById('checkout-email').value.trim();
+            const studentPhone = document.getElementById('checkout-phone').value.trim();
+            const payMethod    = document.querySelector('input[name="checkoutPay"]:checked')?.value || 'card';
+            const transferRef  = document.getElementById('ch-transfer-ref')?.value.trim() || '';
+
+            /* Validación básica */
+            if (!studentName || !studentEmail) {
+                alert('Por favor completa tu nombre y correo electrónico.');
+                return;
+            }
+
+            if (!comprobanteFile) {
+                alert('⚠️ Debes adjuntar el comprobante de pago para continuar.');
+                dropzone.style.borderColor = 'var(--color-neon-magenta)';
+                dropzone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            /* Mostrar overlay */
+            overlay.style.display = 'flex';
+
+            /* Secuencia de mensajes CRM */
+            const steps = [
+                [800,  '💳 Verificando datos del formulario de inscripción…'],
+                [1800, `✅ Datos correctos. Registrando inscripción para ${studentName}…`],
+                [3000, `📎 Guardando comprobante: "${comprobanteFile.name}" (${formatBytes(comprobanteFile.size)})…`],
+                [4200, `🚀 Webhook → POST /api/webhook/register_student\n{ email: "${studentEmail}", course: "pocket-ia" }`],
+                [5400, '💾 Inscripción guardada en base de datos. Generando credenciales…'],
+                [6400, `📧 Enviando credenciales por correo a ${studentEmail}…`],
+            ];
+
+            steps.forEach(([delay, msg]) => {
+                setTimeout(() => { crmLog.textContent = msg; }, delay);
+            });
+
+            /* Completar el proceso */
+            setTimeout(() => {
+                /* Crear el registro de inscripción */
+                const enrollment = {
+                    id              : 'ENR-' + Date.now() + '-' + Math.random().toString(36).slice(2,6).toUpperCase(),
+                    studentName     : studentName,
+                    email           : studentEmail,
+                    phone           : studentPhone,
+                    course          : 'Pocket IA',
+                    courseSlug      : 'pocket-ia',
+                    paymentMethod   : payMethod,
+                    amountUSD       : 89.00,
+                    transferRef     : transferRef,
+                    comprobanteName : comprobanteFile.name,
+                    comprobanteType : comprobanteFile.type,
+                    comprobanteSizeKB: (comprobanteFile.size / 1024).toFixed(1),
+                    comprobanteB64  : comprobanteB64,  // Se guarda el archivo como Base64 en localStorage
+                    enrolledAt      : new Date().toISOString(),
+                    status          : 'pending_review',   // El admin lo cambia a 'active' al verificar
+                };
+
+                /* Guardar en localStorage */
+                const enrollments = getEnrollments();
+                enrollments.push(enrollment);
+                saveEnrollments(enrollments);
+
+                /* Guardar referencia en localStorage para que el aula lo sepa */
+                localStorage.setItem('creative_student_enrolled', 'true');
+                localStorage.setItem('creative_student_name', studentName);
+
+                /* Mostrar pantalla de éxito */
+                loadSt.style.display = 'none';
+                succSt.style.display = 'block';
+
+                /* Llenar los datos del resumen de éxito */
+                document.getElementById('success-name').textContent        = studentName;
+                document.getElementById('success-email').textContent       = studentEmail;
+                document.getElementById('success-method').textContent      = payMethod.toUpperCase();
+                document.getElementById('success-comprobante').textContent = comprobanteFile.name;
+
+                /* Botón de descarga CSV */
+                document.getElementById('btn-download-enrollment-csv').addEventListener('click', exportEnrollmentsCSV);
+
+            }, 7400);
+        });
+
+    })();
+    </script>
+</body>
+</html>

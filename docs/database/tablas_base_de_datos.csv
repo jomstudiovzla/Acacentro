@@ -1,0 +1,146 @@
+tabla,campo,tipo_de_dato,restriccion,descripcion
+users,id,UUID,PK / DEFAULT uuid_generate_v4(),Identificador único del usuario
+users,name,VARCHAR(120),NOT NULL,Nombre completo del usuario
+users,email,VARCHAR(255),UNIQUE / NOT NULL,Correo electrónico (usado para login)
+users,password_hash,VARCHAR(255),NOT NULL,Contraseña cifrada con bcrypt rounds=12
+users,role,ENUM(user_role),NOT NULL / DEFAULT 'student',Rol del usuario: student | teacher | director | owner
+users,avatar_url,TEXT,NULL,URL de la foto de perfil
+users,phone,VARCHAR(25),NULL,Teléfono o WhatsApp del usuario
+users,is_active,BOOLEAN,NOT NULL / DEFAULT TRUE,Si FALSE el usuario no puede iniciar sesión
+users,last_login_at,TIMESTAMPTZ,NULL,Fecha y hora del último login exitoso
+users,created_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de creación del registro
+users,updated_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de última modificación (trigger automático)
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+courses,id,UUID,PK / DEFAULT uuid_generate_v4(),Identificador único del curso
+courses,slug,VARCHAR(120),UNIQUE / NOT NULL,URL amigable del curso (ej: pocket-ia)
+courses,title,VARCHAR(200),NOT NULL,Nombre del curso
+courses,subtitle,VARCHAR(300),NULL,Subtítulo descriptivo del curso
+courses,description,TEXT,NULL,Descripción completa del curso
+courses,category,ENUM(course_category),NOT NULL,Categoría: technology | bachillerato | design | backend
+courses,price_usd,NUMERIC(10-2),NOT NULL / DEFAULT 0.00,Precio en dólares USD
+courses,total_hours,INTEGER,NULL,Total de horas del curso
+courses,total_modules,INTEGER,NULL,Total de módulos del curso
+courses,thumbnail_url,TEXT,NULL,URL de la imagen de portada
+courses,trailer_url,TEXT,NULL,URL del video tráiler
+courses,is_published,BOOLEAN,NOT NULL / DEFAULT FALSE,TRUE = visible para estudiantes
+courses,created_by,UUID,FK → users.id / ON DELETE SET NULL,Usuario (teacher/owner) que creó el curso
+courses,created_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de creación
+courses,updated_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de última modificación
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+modules,id,UUID,PK / DEFAULT uuid_generate_v4(),Identificador único del módulo
+modules,course_id,UUID,FK → courses.id / ON DELETE CASCADE,Curso al que pertenece el módulo
+modules,title,VARCHAR(200),NOT NULL,Título del módulo
+modules,description,TEXT,NULL,Descripción del módulo
+modules,order_index,INTEGER,NOT NULL / DEFAULT 1,Orden del módulo dentro del curso
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+lessons,id,UUID,PK / DEFAULT uuid_generate_v4(),Identificador único de la lección
+lessons,module_id,UUID,FK → modules.id / ON DELETE CASCADE,Módulo al que pertenece la lección
+lessons,title,VARCHAR(300),NOT NULL,Título de la lección
+lessons,description,TEXT,NULL,Descripción o resumen de la lección
+lessons,order_index,INTEGER,NOT NULL / DEFAULT 1,Orden de la lección dentro del módulo
+lessons,duration_seconds,INTEGER,NULL,Duración del video en segundos
+lessons,video_url,TEXT,NULL,URL interna segura del video (no pública directamente)
+lessons,content_text,TEXT,NULL,Texto o markdown complementario al video
+lessons,is_preview,BOOLEAN,NOT NULL / DEFAULT FALSE,TRUE = lección gratuita de muestra sin inscripción
+lessons,created_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de creación
+lessons,updated_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de última modificación
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+enrollments,id,UUID,PK / DEFAULT uuid_generate_v4(),Identificador único de la inscripción
+enrollments,user_id,UUID,FK → users.id / ON DELETE CASCADE,Estudiante inscrito
+enrollments,course_id,UUID,FK → courses.id / ON DELETE CASCADE,Curso en el que se inscribió
+enrollments,status,ENUM(enrollment_status),NOT NULL / DEFAULT 'pending_review',Estado: pending_review | active | expired | refunded
+enrollments,payment_method,VARCHAR(60),NULL,Método de pago: card | paypal | transfer | zelle
+enrollments,payment_amount,NUMERIC(10-2),NULL,Monto pagado en USD
+enrollments,payment_ref,VARCHAR(255),NULL,Número de referencia de la transferencia o Zelle
+enrollments,comprobante_nombre,VARCHAR(255),NULL,Nombre original del archivo del comprobante
+enrollments,comprobante_tipo,VARCHAR(100),NULL,Tipo MIME del comprobante: image/jpeg | image/png | application/pdf
+enrollments,comprobante_tamano_kb,NUMERIC(10-2),NULL,Tamaño del comprobante en kilobytes
+enrollments,comprobante_url,TEXT,NULL,Ruta del archivo en el servidor (en producción) o Base64 en localStorage (demo)
+enrollments,comprobante_verificado,BOOLEAN,NOT NULL / DEFAULT FALSE,TRUE = El director/owner ya revisó y aprobó el comprobante
+enrollments,enrolled_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha y hora de la inscripción
+enrollments,expires_at,TIMESTAMPTZ,NULL,Fecha de expiración (NULL = acceso de por vida)
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+users_registros_login,id,VARCHAR(50),PK (generado en JS: USR-timestamp-random),Identificador único generado en el frontend
+users_registros_login,name,VARCHAR(120),NOT NULL,Nombre completo del usuario registrado
+users_registros_login,email,VARCHAR(255),UNIQUE,Correo electrónico (clave de login)
+users_registros_login,phone,VARCHAR(25),NULL,Teléfono o WhatsApp
+users_registros_login,role,VARCHAR(20),NOT NULL / DEFAULT student,Rol elegido al registro: student | teacher | director | owner
+users_registros_login,password_hash,VARCHAR(100),NOT NULL,Hash simple de contraseña (solo demo — en producción usar bcrypt en backend)
+users_registros_login,is_active,BOOLEAN,DEFAULT TRUE,Si la cuenta está activa
+users_registros_login,created_at,ISO8601 string,NOT NULL,Fecha y hora de creación del registro (new Date().toISOString())
+users_registros_login,last_login_at,ISO8601 string,NULL,Fecha y hora del último login exitoso
+
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+lesson_progress,id,UUID,PK / DEFAULT uuid_generate_v4(),Identificador único del registro de progreso
+lesson_progress,user_id,UUID,FK → users.id / ON DELETE CASCADE,Estudiante
+lesson_progress,lesson_id,UUID,FK → lessons.id / ON DELETE CASCADE,Lección
+lesson_progress,completed,BOOLEAN,NOT NULL / DEFAULT FALSE,TRUE = lección marcada como completada
+lesson_progress,completed_at,TIMESTAMPTZ,NULL,Fecha y hora en que se marcó como completa
+lesson_progress,watch_seconds,INTEGER,NOT NULL / DEFAULT 0,Total de segundos vistos acumulados
+lesson_progress,last_watched_at,TIMESTAMPTZ,NULL,Última vez que el estudiante abrió la lección
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+certificates,id,UUID,PK / DEFAULT uuid_generate_v4(),Identificador único del certificado
+certificates,user_id,UUID,FK → users.id / ON DELETE CASCADE,Estudiante que recibió el certificado
+certificates,course_id,UUID,FK → courses.id / ON DELETE CASCADE,Curso aprobado
+certificates,certificate_hash,VARCHAR(255),UNIQUE / NOT NULL,Hash SHA-256 para verificación pública de autenticidad
+certificates,pdf_url,TEXT,NULL,URL al PDF del certificado generado
+certificates,issued_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de emisión del certificado
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+bachillerato_programs,id,UUID,PK / DEFAULT uuid_generate_v4(),Identificador único del programa de año
+bachillerato_programs,name,VARCHAR(200),NOT NULL,Nombre del año (ej: Primer Año — Fundamentos)
+bachillerato_programs,year,INTEGER,NOT NULL / CHECK 1-5,Número de año del bachillerato (1 al 5)
+bachillerato_programs,description,TEXT,NULL,Descripción del enfoque del año
+bachillerato_programs,shift,VARCHAR(20),NOT NULL / DEFAULT 'morning',Turno: morning (mañana) o afternoon (tarde)
+bachillerato_programs,is_active,BOOLEAN,NOT NULL / DEFAULT TRUE,Si el programa está activo y acepta inscripciones
+bachillerato_programs,created_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de creación del registro
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+bachillerato_subjects,id,UUID,PK / DEFAULT uuid_generate_v4(),Identificador único de la materia
+bachillerato_subjects,program_id,UUID,FK → bachillerato_programs.id / ON DELETE CASCADE,Programa de año al que pertenece
+bachillerato_subjects,name,VARCHAR(200),NOT NULL,Nombre de la materia (ej: Matemática I)
+bachillerato_subjects,teacher_id,UUID,FK → users.id / ON DELETE SET NULL,Docente asignado (rol teacher)
+bachillerato_subjects,hours_per_week,INTEGER,NULL,Horas semanales de la materia
+bachillerato_subjects,semester,INTEGER,NULL / CHECK 1 o 2,Semestre: 1 = primer lapso / 2 = segundo lapso
+bachillerato_subjects,is_tech,BOOLEAN,NOT NULL / DEFAULT FALSE,TRUE = materia técnica/digital (resaltada en portal)
+bachillerato_subjects,created_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de creación
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+bachillerato_preinscripciones,id,UUID,PK / DEFAULT uuid_generate_v4(),Identificador único de la pre-inscripción
+bachillerato_preinscripciones,student_name,VARCHAR(150),NOT NULL,Nombre completo del estudiante
+bachillerato_preinscripciones,student_ci,VARCHAR(20),NOT NULL,Cédula de identidad del estudiante
+bachillerato_preinscripciones,year_apply,INTEGER,NOT NULL / CHECK 1-5,Año al que desea ingresar
+bachillerato_preinscripciones,rep_name,VARCHAR(150),NOT NULL,Nombre del representante legal
+bachillerato_preinscripciones,rep_phone,VARCHAR(25),NOT NULL,Teléfono/WhatsApp del representante
+bachillerato_preinscripciones,rep_email,VARCHAR(255),NOT NULL,Correo electrónico del representante
+bachillerato_preinscripciones,status,ENUM(preinscripcion_status),NOT NULL / DEFAULT 'pending',Estado: pending | contacted | enrolled | rejected
+bachillerato_preinscripciones,notes,TEXT,NULL,Notas internas del asesor que gestionó el caso
+bachillerato_preinscripciones,attended_by,UUID,FK → users.id / ON DELETE SET NULL,Director u owner que atendió la solicitud
+bachillerato_preinscripciones,created_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de envío del formulario
+bachillerato_preinscripciones,updated_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de última actualización del estado
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+refresh_tokens,id,UUID,PK / DEFAULT uuid_generate_v4(),Identificador único del token
+refresh_tokens,user_id,UUID,FK → users.id / ON DELETE CASCADE,Usuario al que pertenece el token
+refresh_tokens,token_hash,VARCHAR(255),UNIQUE / NOT NULL,Hash SHA-256 del refresh token (el token real solo viaja en cookie HttpOnly)
+refresh_tokens,expires_at,TIMESTAMPTZ,NOT NULL,Fecha y hora de expiración del token
+refresh_tokens,revoked,BOOLEAN,NOT NULL / DEFAULT FALSE,TRUE = token revocado manualmente (logout)
+refresh_tokens,created_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha de creación
+
+tabla,campo,tipo_de_dato,restriccion,descripcion
+audit_log,id,BIGSERIAL,PK,ID secuencial del evento (no UUID para mayor rendimiento en inserciones masivas)
+audit_log,user_id,UUID,FK → users.id / ON DELETE SET NULL,Usuario que realizó la acción (NULL si fue acción del sistema)
+audit_log,action,VARCHAR(100),NOT NULL,Acción ejecutada (ej: user.login / course.publish / enrollment.create)
+audit_log,entity_type,VARCHAR(50),NULL,Tipo de entidad afectada: user / course / enrollment / certificate
+audit_log,entity_id,UUID,NULL,ID de la entidad afectada
+audit_log,ip_address,VARCHAR(45),NULL,Dirección IP del cliente (soporta IPv6)
+audit_log,user_agent,TEXT,NULL,User-Agent del navegador o cliente
+audit_log,metadata,JSONB,NULL,Datos adicionales en formato JSON (cambios anteriores/nuevos)
+audit_log,created_at,TIMESTAMPTZ,NOT NULL / DEFAULT NOW(),Fecha y hora del evento
